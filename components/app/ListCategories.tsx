@@ -61,7 +61,7 @@ export const ListCategories = ({ target }: Props) => {
             >
               <input
                 type="checkbox"
-                className="checked:bg-emerald-500 w-5 h-5 outline-none selection:outline-none hover:bg-gray-50 rounded-md "
+                className="form-checkbox checked:bg-emerald-500 w-4 h-4 hover:bg-gray-50 rounded-md cursor-pointer focus:ring-white hover:checked:bg-emerald-500"
               />
               <label className="ml-2">{category.name}</label>
               <button className="absolute invisible right-0 text-gray-400 text-sm group-hover:visible hover:text-emerald-500">

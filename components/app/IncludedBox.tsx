@@ -12,14 +12,14 @@ export const IncludedBox = ({ supplyID }: Props) => {
         <table className="w-full text-center">
           <thead>
             <tr>
-              <th>Producto</th>
+              <th className="w-7/12">Producto</th>
               <th>U.M.</th>
               <th>Cantidad</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Producto 1</td>
+              <td>Ensalada Cesar con Fetuccini</td>
               <td>Kg.</td>
               <td>0.200</td>
             </tr>

@@ -15,11 +15,13 @@ export const LandingHeader = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (supabase.auth.session()) {
-      setLogged(true);
-    } else {
-      setLogged(false);
-    }
+    supabase.auth.getSession().then((res) => {
+      if (!res.data) {
+        setLogged(false);
+      } else {
+        setLogged(true);
+      }
+    });
 
     setLoading(false);
   }, []);
