@@ -4,7 +4,7 @@ import { IconType } from "react-icons/lib";
 
 // Icons
 import { MdOutlineRamenDining } from "react-icons/md";
-import { FaFish } from "react-icons/fa";
+import { FaFish, FaUtensils } from "react-icons/fa";
 
 interface Option {
   name: string;
@@ -22,6 +22,11 @@ const options: Option[] = [
     name: "Insumos",
     icon: FaFish,
     path: "/supplies",
+  },
+  {
+    name: "Conversor",
+    icon: FaUtensils,
+    path: "/converter",
   },
 ];
 

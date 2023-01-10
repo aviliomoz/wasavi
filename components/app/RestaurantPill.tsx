@@ -8,26 +8,31 @@ import {
   FaCog,
   FaExchangeAlt,
 } from "react-icons/fa";
+import { supabase } from "../../supabase";
+import { getLocalData } from "../../utils/functions/local";
+import { Restaurant } from "../../utils/interfaces";
 
 type Props = {
   showName?: boolean;
 };
 
-interface Restaurant {
-  id: string;
-  name: string;
-  currency: string;
-}
-
 export const RestaurantPill = ({ showName = true }: Props) => {
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [restaurant, setRestaurant] = useState<Restaurant>();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setRestaurant(
-      JSON.parse(localStorage.getItem("wasavi_data") || "")?.restaurant
-    );
+    const data = getLocalData().restaurant;
+
+    setRestaurant(data);
   }, []);
+
+  const handleLoguot = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (!error) {
+      document.location.assign("/");
+    }
+  };
 
   return (
     <>

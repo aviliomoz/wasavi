@@ -3,14 +3,7 @@ import { useState } from "react";
 // Icons
 import { FaSearch } from "react-icons/fa";
 
-// Utils
-import { getTargetValue, TargetEnum } from "../../utils/enums";
-
-interface Props {
-  target: TargetEnum;
-}
-
-export const SearchBar = ({ target }: Props) => {
+export const SuppliesSearchBar = () => {
   const [search, setSearch] = useState("");
 
   return (
@@ -19,7 +12,7 @@ export const SearchBar = ({ target }: Props) => {
       <input
         type="text"
         className="form-input px-3 py-0 w-full font-normal text-sm border-none focus:ring-0"
-        placeholder={`Buscar ${getTargetValue(target)}`}
+        placeholder={`Buscar insumo`}
         onChange={(e) => setSearch(e.target.value)}
         value={search}
       />

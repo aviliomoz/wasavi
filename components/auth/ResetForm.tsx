@@ -1,88 +1,60 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
+import { useState } from "react";
 
 // Utils
-import { supabase } from "../../utils/supabase";
-import { setAlert } from "../../utils/slices/alertSlice";
-import { updateWasaviData } from "../../utils/auth";
+import { supabase } from "../../supabase";
+import { alertState } from "../../recoil/alert";
 
 // Hooks
 import { useForm } from "../../utils/hooks/useForm";
 
-// Components
-import AlertBox from "../ui/AlertBox";
-
 const ResetForm = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!supabase.auth.session()) {
-      router.push("/auth/login");
-    }
-  }, []);
-
   const { formData, handleInputChange } = useForm({
     password: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const setAlert = useSetRecoilState(alertState);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (formData.password === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "reset form",
-          message: "El campo de nueva contraseña no puede estar vacío",
-        })
-      );
+      setAlert({
+        type: "error",
+        message: "El campo de nueva contraseña no puede estar vacío",
+      });
 
       return;
     }
 
     setLoading(true);
 
-    const { data, error } = await supabase.auth.update({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.updateUser({
       password: formData.password,
     });
 
-    if (error) {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "reset form",
-          message: "Ocurrió un error al resetear la contraseña",
-        })
-      );
-    }
-
     setLoading(false);
 
-    if (data) {
-      dispatch(
-        setAlert({
-          type: "success",
-          location: "reset form",
-          message: `Se actualizó la contraseña exitosamente`,
-        })
-      );
+    if (error) {
+      setAlert({
+        type: "error",
+        message: "Ocurrió un error al resetear la contraseña",
+      });
+    }
 
-      const { data: user_data, error } = await supabase
-        .from("users")
-        .select("id, name")
-        .eq("auth_id", supabase.auth.user()?.id)
-        .single();
+    if (user) {
+      setAlert({
+        type: "success",
+        message: `Se actualizó la contraseña exitosamente`,
+      });
 
-      if (user_data) {
-        updateWasaviData({ user: user_data, restaurant: {} });
-        setTimeout(() => {
-          router.push("/home");
-        }, 1000);
-      }
+      setTimeout(() => {
+        location.assign("/home");
+      }, 1000);
     }
   };
 
@@ -111,8 +83,6 @@ const ResetForm = () => {
       >
         {loading ? "Actualizando..." : "Guardar"}
       </button>
-
-      <AlertBox />
     </form>
   );
 };

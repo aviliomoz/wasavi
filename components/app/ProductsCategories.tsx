@@ -1,25 +1,19 @@
 import { useState, useEffect } from "react";
 
 // Icons
-import { FaPlusCircle, FaPen } from "react-icons/fa";
+import { FaPlus, FaPen } from "react-icons/fa";
 
 // Utils
-import { supabase } from "../../utils/supabase";
-
-// Types
-import { TargetEnum } from "../../utils/enums";
-
-interface Props {
-  target: TargetEnum;
-}
+import { supabase } from "../../supabase";
+import { getLocalData } from "../../utils/functions/local";
 
 interface Category {
   name: string;
   id: string;
 }
 
-export const ListCategories = ({ target }: Props) => {
-  const [categories, setCategories] = useState<Category[] | [] | null>([]);
+export const ProductsCategories = () => {
+  const [categories, setCategories] = useState<Category[] | []>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,15 +23,16 @@ export const ListCategories = ({ target }: Props) => {
     });
   }, []);
 
-  const getCategories = async () => {
-    const restaurantID: string = JSON.parse(
-      localStorage.getItem("wasavi_data") || ""
-    ).restaurant.id;
+  const getCategories = async (): Promise<Category[] | []> => {
+    const restaurantID = getLocalData().restaurant?.id;
 
     const { data, error } = await supabase
       .from("categories")
       .select("id, name")
-      .match({ restaurant: restaurantID, type: target });
+      .eq("restaurant", restaurantID)
+      .eq("type", "PRODUCTS");
+
+    if (error || !data) return [];
 
     return data;
   };
@@ -48,8 +43,8 @@ export const ListCategories = ({ target }: Props) => {
     <div>
       <div className="flex items-center justify-between mb-2">
         <h3 className="font-medium">Categorías</h3>
-        <button className="bg-emerald-500 p-1 rounded-md text-white text-sm">
-          <FaPlusCircle />
+        <button className="bg-emerald-500 p-1 rounded-md text-white text-xs">
+          <FaPlus />
         </button>
       </div>
       <ul className="w-full">

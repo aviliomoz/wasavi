@@ -1,16 +1,27 @@
-import { LandingHeader } from "../../components/app/LandingHeader";
+import { useEffect } from "react";
+
+// Utils
+import { supabase } from "../../supabase";
+
+// Components
+import { LandingLayout } from "../../components/app/LandingLayout";
 import LoginForm from "../../components/auth/LoginForm";
 
 const LoginPage = () => {
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) location.assign("/home");
+    });
+  }, []);
+
   return (
-    <>
-      <LandingHeader />
-      <main className="w-full flex justify-center">
+    <LandingLayout>
+      <div className="w-full flex justify-center">
         <div className="w-[30%] mt-10 rounded-md shadow-md p-10">
           <LoginForm />
         </div>
-      </main>
-    </>
+      </div>
+    </LandingLayout>
   );
 };
 

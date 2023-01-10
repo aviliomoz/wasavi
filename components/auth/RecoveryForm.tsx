@@ -1,76 +1,55 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
+import { useState } from "react";
 import Link from "next/link";
 
 // Utils
-import { supabase } from "../../utils/supabase";
-import { setAlert } from "../../utils/slices/alertSlice";
+import { supabase } from "../../supabase";
+import { alertState } from "../../recoil/alert";
 
 // Hooks
 import { useForm } from "../../utils/hooks/useForm";
 
-// Components
-import AlertBox from "../ui/AlertBox";
-
 const RecoveryForm = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (supabase.auth.session()) {
-      router.push("/home");
-    }
-  }, []);
-
   const { formData, handleInputChange } = useForm({
     email: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const setAlert = useSetRecoilState(alertState);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (formData.email === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "recovery form",
-          message: "El campo de email no puede estar vacío",
-        })
-      );
+      setAlert({
+        type: "error",
+        message: "El campo de email no puede estar vacío",
+      });
 
       return;
     }
 
     setLoading(true);
 
-    let { data, error } = await supabase.auth.api.resetPasswordForEmail(
+    let { data, error } = await supabase.auth.resetPasswordForEmail(
       formData.email
     );
 
+    setLoading(false);
+
     if (error) {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "recovery form",
-          message: "Ocurrió un error al verificar el correo",
-        })
-      );
+      setAlert({
+        type: "error",
+        message: "Ocurrió un error al verificar el correo",
+      });
     }
 
     if (data) {
-      dispatch(
-        setAlert({
-          type: "success",
-          location: "recovery form",
-          message: `Se acaba de enviar un enlace de recuperación al correo: ${formData.email}`,
-        })
-      );
+      setAlert({
+        type: "success",
+        message: `Se acaba de enviar un enlace de recuperación al correo: ${formData.email}`,
+      });
     }
-
-    setLoading(false);
   };
 
   return (
@@ -104,7 +83,6 @@ const RecoveryForm = () => {
       >
         <span>Regresar al inicio de sesión</span>
       </Link>
-      <AlertBox />
     </form>
   );
 };

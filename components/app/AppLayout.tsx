@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+
+// Components
 import Logo from "../ui/Logo";
 import { AppMenu } from "./AppMenu";
 
@@ -9,8 +12,10 @@ export const AppLayout = ({ children }: any) => {
         <br />
         <AppMenu />
       </section>
-      <section className="w-[85%] min-h-screen py-4 pl-0 pr-4 ml-[15%]">
-        <div className="w-full h-full bg-gray-100 rounded-md">{children}</div>
+      <section className="w-[85%] min-h-screen py-4 pl-0 pr-4 ml-[15%] relative">
+        <div className="w-full h-full bg-gray-100 rounded-md relative overflow-hidden">
+          {children}
+        </div>
       </section>
     </div>
   );

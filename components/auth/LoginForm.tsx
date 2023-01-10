@@ -1,99 +1,79 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
+import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 import Link from "next/link";
-
-// Utils
-import { supabase } from "../../utils/supabase";
-import { setAlert } from "../../utils/slices/alertSlice";
-import { updateWasaviData } from "../../utils/auth";
 
 // Hooks
 import { useForm } from "../../utils/hooks/useForm";
 
-// Components
-import AlertBox from "../ui/AlertBox";
+// Utils
+import { validateLogin } from "../../utils/validators/auth";
+import { alertState } from "../../recoil/alert";
+import { supabase } from "../../supabase";
+import { getUserData } from "../../utils/functions/auth";
+import { setLocalData } from "../../utils/functions/local";
 
 const LoginForm = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (supabase.auth.session()) {
-      router.push("/home");
-    }
-  }, []);
-
   const { formData, handleInputChange } = useForm({
     email: "",
     password: "",
   });
-
   const [loading, setLoading] = useState(false);
+  const setAlert = useSetRecoilState(alertState);
 
-  const handleSubmit = async (e: any) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.email === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "login form",
-          message: "El campo de email no puede estar vacío",
-        })
-      );
+    const { validated, message } = await validateLogin(
+      formData.email,
+      formData.password
+    );
 
-      return;
-    }
-
-    if (formData.password === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "login form",
-          message: "El campo de contraseña no puede estar vacío",
-        })
-      );
-
-      return;
+    if (!validated) {
+      return setAlert({
+        type: "error",
+        message,
+      });
     }
 
     setLoading(true);
 
-    const { user, error } = await supabase.auth.signIn({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     });
 
-    if (error) {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "login form",
-          message: "Lo datos de inicio de sesión ingresados son incorrectos",
-        })
-      );
+    if (error || !user) {
+      setLoading(false);
+
+      return setAlert({
+        type: "error",
+        message: "Lo datos de inicio de sesión ingresados son incorrectos",
+      });
+    }
+
+    const data = await getUserData(user);
+
+    if (!data) {
+      setLoading(false);
+
+      return setAlert({
+        type: "error",
+        message: "Ocurrió un error al cargar los datos del usuario",
+      });
     }
 
     setLoading(false);
 
-    if (user) {
-      const { data: user_data, error } = await supabase
-        .from("users")
-        .select("id, name")
-        .eq("auth_id", user.id)
-        .single();
-
-      if (user_data) {
-        updateWasaviData({ user: user_data, restaurant: {} });
-        router.push("/home");
-      }
-    }
+    setLocalData({ user: data });
+    location.assign("/home");
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleLogin}
       className="w-full flex flex-col items-center justify-center"
     >
       <h2 className="mb-6 font-bold text-xl">Inicio de sesión</h2>
@@ -134,7 +114,6 @@ const LoginForm = () => {
         <span>¿No tienes cuenta? - </span>
         <strong>Regístrate</strong>
       </Link>
-      <AlertBox />
     </form>
   );
 };

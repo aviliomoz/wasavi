@@ -8,23 +8,32 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { supabase } from "../../supabase";
+import { getLocalData } from "../../utils/functions/local";
+import { User } from "../../utils/interfaces";
 
 type Props = {
   showName?: boolean;
 };
 
-interface User {
-  id: string;
-  name: string;
-}
-
 export const UserPill = ({ showName = true }: Props) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("wasavi_data") || "")?.user);
+    const data = getLocalData().user;
+
+    setUser(data);
   }, []);
+
+  const handleLoguot = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (!error) {
+      document.location.assign("/");
+      localStorage.clear();
+    }
+  };
 
   return (
     <>
@@ -43,7 +52,10 @@ export const UserPill = ({ showName = true }: Props) => {
               <FaCog />
               <p className="min-w-max">Ajustes de usuario</p>
             </li>
-            <li className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm">
+            <li
+              onClick={() => handleLoguot()}
+              className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm"
+            >
               <FaSignOutAlt />
               <p className="min-w-max">Cerrar sesión</p>
             </li>

@@ -1,39 +1,25 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../supabase";
 
 // Types
-import {
-  CurrencyEnum,
-  getCurrencySymbol,
-  getFullUM,
-  UMEnum,
-} from "../../utils/enums";
+import { Currency, getFullUM, UMEnum } from "../../utils/interfaces";
 import { RecipeBox } from "./RecipeBox";
+import { useRouter } from "next/router";
+import { getCurrencySymbol } from "../../utils/functions/currency";
 
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  categories: {
-    name: string;
-  };
-  restaurant: string;
-  um: UMEnum;
-  amount: number;
-  price: number;
-  is_for_sale: boolean;
-}
+import { Product } from "../../utils/interfaces";
+import { getLocalData } from "../../utils/functions/local";
 
 export const ProductDetails = () => {
-  const { product } = useSelector((state: any) => state.item);
-  const [details, setDetails] = useState<Product | null>(null);
-  const [currency, setCurrency] = useState<CurrencyEnum>(CurrencyEnum.USD);
+  const router = useRouter();
+
+  const [details, setDetails] = useState<Product>();
+  const [currency, setCurrency] = useState<Currency>(Currency.USD);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    if (product) {
+    if (router.query.id) {
       getProductDetails().then((res) => {
         setDetails(res);
         setTimeout(() => {
@@ -41,25 +27,23 @@ export const ProductDetails = () => {
         }, 500);
       });
     }
-  }, [product]);
+  }, [router.query.id]);
 
   useEffect(() => {
-    setCurrency(
-      JSON.parse(localStorage.getItem("wasavi_data") || "").restaurant.currency
-    );
+    setCurrency(getLocalData().restaurant?.currency || Currency.USD);
   }, []);
 
   const getProductDetails = async () => {
     const { data, error } = await supabase
       .from("products")
       .select("*, categories(name)")
-      .eq("id", product)
+      .eq("id", router.query.id)
       .single();
 
     return data;
   };
 
-  if (!details) {
+  if (!router.query.id) {
     return <div>Selecciona un producto</div>;
   }
 
@@ -68,7 +52,7 @@ export const ProductDetails = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="flex flex-col space-y-1 items-start">
       <p>
         <strong className="mr-2">Nombre: </strong>
         {details?.name}
@@ -84,15 +68,22 @@ export const ProductDetails = () => {
       {details?.is_for_sale && (
         <p>
           <strong className="mr-2">Precio de venta: </strong>
-          {getCurrencySymbol(details?.price, currency)}
+          {getCurrencySymbol(currency)} {details.price}
         </p>
       )}
-      <hr style={{ margin: "20px 0px" }} />
+      <hr style={{ margin: "20px 0px", width: "100%" }} />
       <p>
         <strong className="mr-2">Receta para: </strong>
-        {getFullUM(details?.amount, details?.um)}
+        {details?.amount && getFullUM(details?.amount, details?.um)}
       </p>
       <RecipeBox />
+      <button
+        onClick={() =>
+          router.push(`${router.pathname}?id=${router.query.id}&action=edit`)
+        }
+      >
+        Editar producto
+      </button>
     </div>
   );
 };

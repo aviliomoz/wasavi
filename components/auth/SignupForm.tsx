@@ -1,29 +1,15 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
+import { useState } from "react";
 import Link from "next/link";
 
 // Utils
-import { supabase } from "../../utils/supabase";
-import { setAlert } from "../../utils/slices/alertSlice";
-import { updateWasaviData } from "../../utils/auth";
+import { supabase } from "../../supabase";
+import { alertState } from "../../recoil/alert";
 
 // Hooks
 import { useForm } from "../../utils/hooks/useForm";
 
-// Components
-import AlertBox from "../ui/AlertBox";
-
 const SignupForm = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (supabase.auth.session()) {
-      router.push("/home");
-    }
-  }, []);
-
   const { formData, handleInputChange } = useForm({
     name: "",
     email: "",
@@ -31,92 +17,72 @@ const SignupForm = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const setAlert = useSetRecoilState(alertState);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (formData.email === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "signup form",
-          message: "El campo de email no puede estar vacío",
-        })
-      );
+      setAlert({
+        type: "error",
+        message: "El campo de email no puede estar vacío",
+      });
 
       return;
     }
 
     if (formData.password === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "signup form",
-          message: "El campo de contraseña no puede estar vacío",
-        })
-      );
+      setAlert({
+        type: "error",
+        message: "El campo de contraseña no puede estar vacío",
+      });
 
       return;
     }
 
     if (formData.name === "") {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "signup form",
-          message: "El campo de nombre no puede estar vacío",
-        })
-      );
+      setAlert({
+        type: "error",
+        message: "El campo de nombre no puede estar vacío",
+      });
 
       return;
     }
 
     setLoading(true);
 
-    const { user, error } = await supabase.auth.signUp({
+    const {
+      data: { user, session },
+      error,
+    } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
     });
 
-    if (error) {
-      dispatch(
-        setAlert({
-          type: "error",
-          location: "signup form",
-          message: "Ocurrió un error en el registro",
-        })
-      );
-    }
-
     setLoading(false);
 
+    if (error) {
+      setAlert({
+        type: "error",
+        message: "Ocurrió un error en el registro",
+      });
+    }
+
     if (user) {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("users")
         .insert([{ auth_id: user.id, name: formData.name }])
         .single();
 
       if (error)
-        dispatch(
-          setAlert({
-            type: "error",
-            location: "signup form",
-            message: "Ocurrió un error en el registro",
-          })
-        );
+        setAlert({
+          type: "error",
+          message: "Ocurrió un error en el registro",
+        });
+    }
 
-      if (data) {
-        const { data: user_data, error } = await supabase
-          .from("users")
-          .select("id, name")
-          .eq("auth_id", user.id)
-          .single();
-
-        if (user_data) {
-          updateWasaviData({ user: user_data, restaurant: {} });
-          router.push("/home");
-        }
-      }
+    if (session) {
+      location.assign("/home");
     }
   };
 
@@ -167,7 +133,6 @@ const SignupForm = () => {
         <span>¿Ya tienes cuenta? - </span>
         <strong>Inicia sesión</strong>
       </Link>
-      <AlertBox />
     </form>
   );
 };

@@ -1,41 +1,28 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { supabase } from "../../utils/supabase";
+
+// Utils
+import { supabase } from "../../supabase";
+import { getCurrencySymbol } from "../../utils/functions/currency";
+import { getLocalData } from "../../utils/functions/local";
 
 // Types
-import {
-  CurrencyEnum,
-  getCurrencySymbol,
-  getFullUM,
-  UMEnum,
-} from "../../utils/enums";
+import { Currency, getFullUM } from "../../utils/interfaces";
+import { Supply } from "../../utils/interfaces";
 
 // Components
 import { IncludedBox } from "./IncludedBox";
 
-interface Supply {
-  id: string;
-  name: string;
-  category: string;
-  categories: {
-    name: string;
-  };
-  restaurant: string;
-  um: UMEnum;
-  waste: number;
-  price: number;
-  taxes_included: boolean;
-}
-
 export const SupplyDetails = () => {
-  const { supply } = useSelector((state: any) => state.item);
-  const [details, setDetails] = useState<Supply | null>(null);
-  const [currency, setCurrency] = useState<CurrencyEnum>(CurrencyEnum.USD);
+  const router = useRouter();
+
+  const [details, setDetails] = useState<Supply>();
+  const [currency, setCurrency] = useState<Currency>(Currency.USD);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    if (supply) {
+    if (router.query.id) {
       getSupplyDetails().then((res) => {
         setDetails(res);
         setTimeout(() => {
@@ -43,25 +30,23 @@ export const SupplyDetails = () => {
         }, 500);
       });
     }
-  }, [supply]);
+  }, [router.query.id]);
 
   useEffect(() => {
-    setCurrency(
-      JSON.parse(localStorage.getItem("wasavi_data") || "").restaurant.currency
-    );
+    setCurrency(getLocalData().restaurant?.currency || Currency.USD);
   }, []);
 
   const getSupplyDetails = async () => {
     const { data, error } = await supabase
       .from("supplies")
       .select("*, categories(name)")
-      .eq("id", supply)
+      .eq("id", router.query.id)
       .single();
 
     return data;
   };
 
-  if (!details) {
+  if (!router.query.id) {
     return <div>Selecciona un insumo</div>;
   }
 
@@ -70,7 +55,7 @@ export const SupplyDetails = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="flex flex-col space-y-1 items-start">
       <p>
         <strong className="mr-2">Nombre: </strong>
         {details?.name}
@@ -81,11 +66,11 @@ export const SupplyDetails = () => {
       </p>
       <p>
         <strong className="mr-2">Unidad de medida: </strong>
-        {getFullUM(1, details?.um, false)}
+        {details && getFullUM(1, details?.um, false)}
       </p>
       <p>
         <strong className="mr-2">Precio de compra: </strong>
-        {getCurrencySymbol(details?.price, currency)}
+        {details && getCurrencySymbol(currency)} {details?.price}
       </p>
       <p>
         <strong className="mr-2">Merma: </strong>
@@ -96,11 +81,18 @@ export const SupplyDetails = () => {
         {details?.taxes_included ? "Sí" : "No"}
       </p>
 
-      <hr style={{ margin: "20px 0px" }} />
+      <hr style={{ margin: "20px 0px", width: "100%" }} />
       <p>
         <strong className="mr-2">Presente en los siguientes productos: </strong>
       </p>
       <IncludedBox />
+      <button
+        onClick={() =>
+          router.push(`${router.pathname}?id=${router.query.id}&action=edit`)
+        }
+      >
+        Editar insumo
+      </button>
     </div>
   );
 };

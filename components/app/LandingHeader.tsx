@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 // Utils
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../supabase";
 
 // Icons
 import { FaChevronDown } from "react-icons/fa";
@@ -15,8 +15,8 @@ export const LandingHeader = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then((res) => {
-      if (!res.data) {
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
         setLogged(false);
       } else {
         setLogged(true);
@@ -36,7 +36,9 @@ export const LandingHeader = () => {
         </button>
       </section>
       <section>
-        {loading ? null : logged ? (
+        {loading ? (
+          <></>
+        ) : logged ? (
           <Link
             href={"/home"}
             className="bg-emerald-500 text-white py-2 px-4 rounded-md"
@@ -44,19 +46,15 @@ export const LandingHeader = () => {
             Entrar a la App
           </Link>
         ) : (
-          <ul className="flex space-x-6 items-center">
-            <li>
-              <Link href={"/auth/login"}>Iniciar sesión</Link>
-            </li>
-            <li>
-              <Link
-                href={"/auth/signup"}
-                className="bg-emerald-500 text-white py-2 px-4 rounded-md"
-              >
-                Registrarse
-              </Link>
-            </li>
-          </ul>
+          <div className="flex space-x-6 items-center">
+            <Link href={"/auth/login"}>Iniciar sesión</Link>
+            <Link
+              href={"/auth/signup"}
+              className="bg-emerald-500 text-white py-2 px-4 rounded-md"
+            >
+              Registrarse
+            </Link>
+          </div>
         )}
       </section>
     </header>
