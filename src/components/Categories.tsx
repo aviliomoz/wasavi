@@ -4,15 +4,20 @@ import { useState, useEffect } from "react";
 import { FaPlus, FaPen } from "react-icons/fa";
 
 // Utils
-import { supabase } from "../../supabase";
-import { getLocalData } from "../../functions/local";
+import { supabase } from "../services/supabase";
+import { useLocalData } from "../hooks/useLocalData";
 
 interface Category {
   name: string;
   id: string;
 }
 
-export const ProductsCategories = () => {
+interface Props {
+  target: "supplies" | "products";
+}
+
+export const Categories = ({ target }: Props) => {
+  const { getLocalData } = useLocalData();
   const [categories, setCategories] = useState<Category[] | []>([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,13 +29,13 @@ export const ProductsCategories = () => {
   }, []);
 
   const getCategories = async (): Promise<Category[] | []> => {
-    const restaurantID = getLocalData().restaurant?.id;
+    const restaurantID = getLocalData().restaurant;
 
     const { data, error } = await supabase
       .from("categories")
       .select("id, name")
       .eq("restaurant", restaurantID)
-      .eq("type", "PRODUCTS");
+      .eq("type", target);
 
     if (error || !data) return [];
 

@@ -1,47 +1,40 @@
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-
 // Components
-import { ProductsHeader } from "../components/app/ProductsHeader";
-import { AppLayout } from "../components/app/AppLayout";
-import { ProductsCategories } from "../components/app/ProductsCategories";
-import { ProductsList } from "../components/app/ProductsList";
-import { ProductDetails } from "../components/app/ProductDetails";
+import { AppLayout } from "../components/ui/AppLayout";
+import { Categories } from "../components/Categories";
+import { ItemsList } from "../components/ItemsList";
+import { DownloadButton } from "../components/DownloadButton";
+import { RestaurantPill } from "../components/ui/RestaurantPill";
+import { AddButton } from "../components/AddButton";
+import { SearchBar } from "../components/SearchBar";
 import { Board } from "../components/ui/Board";
-import { PrivateRoute } from "../components/routes/PrivateRoute";
+import { UserPill } from "../components/ui/UserPill";
+import { Outlet } from "react-router-dom";
 
-const ProductsPage: NextPage = () => {
-  const router = useRouter();
-  const { action } = router.query;
-
+export const ProductsPage = () => {
   return (
-    <PrivateRoute>
-      <AppLayout>
-        <ProductsHeader />
-        <section className="w-full flex space-x-4 px-4 pt-0 pb-4">
-          <Board width="w-1/6" title="Filtros">
-            <ProductsCategories />
-          </Board>
-          <Board width="w-2/6" title="Lista de productos" fullSize={true}>
-            <ProductsList />
-          </Board>
-          {action === "new" ? (
-            <Board width="w-3/6" title="Nuevo producto">
-              <ProductDetails />
-            </Board>
-          ) : action === "edit" ? (
-            <Board width="w-3/6" title="Editar producto">
-              <ProductDetails />
-            </Board>
-          ) : (
-            <Board width="w-3/6" title="Detalles del producto">
-              <ProductDetails />
-            </Board>
-          )}
+    <AppLayout>
+      <header className="w-full p-4 flex items-center justify-between">
+        <section className="w-2/5 flex items-center justify-start">
+          <SearchBar target="products" />
         </section>
-      </AppLayout>
-    </PrivateRoute>
+        <section className="w-3/5 flex items-center justify-end space-x-2">
+          <AddButton path="/products/new" text="Nuevo producto" />
+          <DownloadButton />
+          <RestaurantPill />
+          <UserPill />
+        </section>
+      </header>
+      <section className="w-full flex space-x-4 px-4 pt-0 pb-4">
+        <Board width="w-1/6" title="Filtros">
+          <Categories target="products" />
+        </Board>
+        <Board width="w-2/6" title="Lista de productos" fullSize={true}>
+          <ItemsList target="products" />
+        </Board>
+        <Board width="w-3/6" title="Detalles del producto">
+          <Outlet />
+        </Board>
+      </section>
+    </AppLayout>
   );
 };
-
-export default ProductsPage;

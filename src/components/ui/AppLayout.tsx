@@ -1,10 +1,12 @@
-import { useSelector } from "react-redux";
-
 // Components
-import { Logo } from "../ui/Logo";
+import { Logo } from "./Logo";
 import { AppMenu } from "./AppMenu";
 
-export const AppLayout = ({ children }: any) => {
+interface Props {
+  children: JSX.Element | JSX.Element[];
+}
+
+export const AppLayout = ({ children }: Props) => {
   return (
     <div className="w-full min-h-screen flex relative">
       <section className="w-[15%] min-h-screen py-6 px-4 flex flex-col items-center fixed">

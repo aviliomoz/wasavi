@@ -14,7 +14,7 @@ export const RestaurantCard = ({ id }: Props) => {
     <Link
       className="border border-gray-200 rounded-md p-6 font-medium flex space-x-4 mb-2 items-center"
       onClick={() => updateLocalData({ restaurant: restaurant?.id })}
-      to="/products"
+      to="/supplies"
     >
       <i className="w-3 h-3 rounded-full bg-emerald-500"></i>
       <p>{restaurant?.name}</p>

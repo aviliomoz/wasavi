@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Components
-import { LoginForm } from "./components/auth/LoginForm";
+// Routes
 import { PrivateRoute } from "./components/routes/PrivateRoute";
 import { RebelRoute } from "./components/routes/RebelRoute";
+
+// Components
+import { LoginForm } from "./components/auth/LoginForm";
 import { RecoveryForm } from "./components/auth/RecoveryForm";
 import { ResetForm } from "./components/auth/ResetForm";
 import { SignupForm } from "./components/auth/SignupForm";
@@ -12,6 +14,8 @@ import { RestaurantsList } from "./components/restaurant/RestaurantsList";
 // Pages
 import { LandingPage } from "./pages/LandingPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { SuppliesPage } from "./pages/SuppliesPage";
+import { ProductsPage } from "./pages/ProductsPage";
 
 export const App = () => {
   return (
@@ -29,6 +33,21 @@ export const App = () => {
             <Route path="signup" element={<SignupForm />} />
             <Route path="recovery" element={<RecoveryForm />} />
           </Route>
+        </Route>
+        <Route element={<PrivateRoute />}>
+          <Route path="/supplies/*" element={<SuppliesPage />}>
+            <Route path="" element={<p>Selecciona un insumo</p>} />
+            <Route path=":id" element={<p>Detalles del insumo (x)</p>} />
+            <Route path="new" element={<p>New supply</p>} />
+            <Route path="edit/:id" element={<p>Edit supply</p>} />
+          </Route>
+          <Route path="/products/*" element={<ProductsPage />}>
+            <Route path="" element={<p>Selecciona un producto</p>} />
+            <Route path=":id" element={<p>Detalles del producto (x)</p>} />
+            <Route path="new" element={<p>New product</p>} />
+            <Route path="edit/:id" element={<p>Edit product</p>} />
+          </Route>
+          <Route path="/converter" element={<p>Converter</p>} />
         </Route>
       </Routes>
     </BrowserRouter>

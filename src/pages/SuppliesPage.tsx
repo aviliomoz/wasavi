@@ -1,44 +1,40 @@
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-
 // Components
-import { SuppliesHeader } from "../components/app/SuppliesHeader";
-import { AppLayout } from "../components/app/AppLayout";
-import { SuppliesCategories } from "../components/app/SuppliesCategories";
-import { SuppliesList } from "../components/app/SuppliesList";
-import { SupplyDetails } from "../components/app/SupplyDetails";
+import { AppLayout } from "../components/ui/AppLayout";
+import { Categories } from "../components/Categories";
+import { ItemsList } from "../components/ItemsList";
+import { DownloadButton } from "../components/DownloadButton";
+import { RestaurantPill } from "../components/ui/RestaurantPill";
+import { AddButton } from "../components/AddButton";
+import { SearchBar } from "../components/SearchBar";
 import { Board } from "../components/ui/Board";
+import { UserPill } from "../components/ui/UserPill";
+import { Outlet } from "react-router-dom";
 
-const SuppliesPage: NextPage = () => {
-  const router = useRouter();
-  const { action } = router.query;
-
+export const SuppliesPage = () => {
   return (
     <AppLayout>
-      <SuppliesHeader />
+      <header className="w-full p-4 flex items-center justify-between">
+        <section className="w-2/5 flex items-center justify-start">
+          <SearchBar target="supplies" />
+        </section>
+        <section className="w-3/5 flex items-center justify-end space-x-2">
+          <AddButton path="/supplies/new" text="Nuevo insumo" />
+          <DownloadButton />
+          <RestaurantPill />
+          <UserPill />
+        </section>
+      </header>
       <section className="w-full flex space-x-4 px-4 pt-0 pb-4">
         <Board width="w-1/6" title="Filtros">
-          <SuppliesCategories />
+          <Categories target="supplies" />
         </Board>
         <Board width="w-2/6" title="Lista de insumos" fullSize={true}>
-          <SuppliesList />
+          <ItemsList target="supplies" />
         </Board>
-        {action === "new" ? (
-          <Board width="w-3/6" title="Nuevo insumo">
-            <SupplyDetails />
-          </Board>
-        ) : action === "edit" ? (
-          <Board width="w-3/6" title="Editar insumo">
-            <SupplyDetails />
-          </Board>
-        ) : (
-          <Board width="w-3/6" title="Detalles del insumo">
-            <SupplyDetails />
-          </Board>
-        )}
+        <Board width="w-3/6" title="Detalles del insumo">
+          <Outlet />
+        </Board>
       </section>
     </AppLayout>
   );
 };
-
-export default SuppliesPage;

@@ -2,26 +2,25 @@ import { useState } from "react";
 
 // Icons
 import {
-  FaUser,
+  FaStore,
   FaChevronDown,
   FaChevronUp,
   FaCog,
-  FaSignOutAlt,
+  FaExchangeAlt,
 } from "react-icons/fa";
-import { useAuth } from "../hooks/useAuth";
+import { useLocalData } from "../../hooks/useLocalData";
 
 // Hooks
-import { useUser } from "../hooks/useUser";
+import { useRestaurant } from "../../hooks/useRestaurant";
 
 type Props = {
-  id: string;
   showName?: boolean;
 };
 
-export const UserPill = ({ showName = true, id }: Props) => {
-  const { user } = useUser(id);
+export const RestaurantPill = ({ showName = true }: Props) => {
+  const { getLocalData } = useLocalData();
+  const { restaurant } = useRestaurant(getLocalData().restaurant);
   const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useAuth();
 
   return (
     <>
@@ -29,23 +28,20 @@ export const UserPill = ({ showName = true, id }: Props) => {
         onClick={() => setIsOpen(!isOpen)}
         className="relative bg-white py-1 px-3 text-sm font-normal rounded-md shadow-sm flex space-x-2 items-center"
       >
-        <FaUser className="fill-emerald-500" />
-        {user && showName && (
-          <p className="max-w-[100px] truncate">{user.name}</p>
+        <FaStore className="fill-emerald-500" />
+        {restaurant && showName && (
+          <p className="max-w-[100px] truncate">{restaurant.name}</p>
         )}
         {isOpen ? <FaChevronUp /> : <FaChevronDown />}
         {isOpen && (
           <ul className="z-10 text-sm absolute -bottom-20 right-0 bg-white p-2 rounded-md shadow-md">
             <li className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm">
               <FaCog />
-              <p className="min-w-max">Ajustes de usuario</p>
+              <p className="min-w-max">Ajustes de restaurante</p>
             </li>
-            <li
-              onClick={() => logout()}
-              className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm"
-            >
-              <FaSignOutAlt />
-              <p className="min-w-max">Cerrar sesión</p>
+            <li className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm">
+              <FaExchangeAlt />
+              <p className="min-w-max">Cambiar restaurante</p>
             </li>
           </ul>
         )}

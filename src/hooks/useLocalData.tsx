@@ -30,7 +30,7 @@ export const useLocalData = (key: string = "wasavi_data") => {
   };
 
   const setLocalData = async () => {
-    let localData: LocalData = initialData;
+    let localData: LocalData = getLocalData();
 
     const {
       data: { user },
