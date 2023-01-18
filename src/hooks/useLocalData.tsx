@@ -1,73 +1,35 @@
-import { useSetRecoilState } from "recoil";
-import { alertState } from "../contexts/alertState";
-import { supabase } from "../services/supabase";
+import { useEffect, useState } from "react";
 
 // Types
 import { LocalData } from "../types/interfaces";
 
-const initialData: LocalData = { user: "", restaurant: "", restaurants: [] };
+const initialData: LocalData = {
+  user: "",
+  restaurant: "",
+};
 
 export const useLocalData = (key: string = "wasavi_data") => {
-  const setAlert = useSetRecoilState(alertState);
+  const [data] = useState<LocalData>(
+    JSON.parse(localStorage.getItem(key) || JSON.stringify(initialData))
+  );
 
-  const getLocalData = (): LocalData => {
-    return JSON.parse(localStorage.getItem(key) || JSON.stringify(initialData));
+  const updateUser = (user: string) => {
+    localStorage.setItem(key, JSON.stringify({ ...data, user }));
   };
 
-  const updateLocalData = (newData: {
-    user?: string;
-    restaurant?: string;
-    restaurants?: string[] | [];
-  }) => {
-    const localData = getLocalData();
-    const updatedLocalData = { ...localData, ...newData };
-
-    localStorage.setItem(key, JSON.stringify(updatedLocalData));
+  const updateRestaurant = (restaurant: string) => {
+    localStorage.setItem(key, JSON.stringify({ ...data, restaurant }));
   };
 
-  const clearLocalData = () => {
+  const cleanLocalData = () => {
     localStorage.removeItem(key);
   };
 
-  const setLocalData = async () => {
-    let localData: LocalData = getLocalData();
-
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      localData.user = "";
-
-      setAlert({ type: "error", message: "Error al cargar el ID del usuario" });
-    } else {
-      localData.user = user.id;
-
-      const { data: restaurants, error } = await supabase
-        .from("restaurants_users")
-        .select("restaurant")
-        .eq("user", user.id);
-
-      if (error || !restaurants) {
-        localData.restaurants = [];
-
-        setAlert({
-          type: "error",
-          message: "Error al cargar la lista restaurantes",
-        });
-      } else {
-        localData.restaurants = restaurants.map((r) => r.restaurant);
-      }
-
-      updateLocalData(localData);
-    }
-  };
-
   return {
-    getLocalData,
-    updateLocalData,
-    setLocalData,
-    clearLocalData,
-  };
+    user: data.user,
+    restaurant: data.restaurant,
+    updateUser,
+    updateRestaurant,
+    cleanLocalData,
+  } as const;
 };

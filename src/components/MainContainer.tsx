@@ -4,11 +4,12 @@ import { useRecoilState } from "recoil";
 
 // Utils
 import { alertState } from "../contexts/alertState";
-import { supabase } from "../services/supabase";
 
 // Components
 import { AlertBox } from "./ui/AlertBox";
-import { useLocalData } from "../hooks/useLocalData";
+
+// Hooks
+import { useAuth } from "../hooks/useAuth";
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -16,32 +17,33 @@ interface Props {
 
 export const MainContainer = ({ children }: Props) => {
   const [alert, setAlert] = useRecoilState(alertState);
-  const { setLocalData } = useLocalData();
+  const { session, loading, logout } = useAuth();
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (session && event == "PASSWORD_RECOVERY") redirect("/reset");
-      if (session && event == "SIGNED_IN") {
-        setLocalData().then(() => {});
+    if (!loading) {
+      if (!session) {
+        logout();
       }
-    });
-  }, []);
+    }
+  }, [loading, session]);
 
   useEffect(() => {
     if (alert.message) {
       setTimeout(() => {
         setAlert({
-          type: null,
+          type: undefined,
           message: undefined,
         });
       }, 4000);
     }
   }, [alert]);
 
-  return (
+  return !loading ? (
     <main className="w-full min-h-screen relative">
       {children}
       <AlertBox />
     </main>
+  ) : (
+    <></>
   );
 };

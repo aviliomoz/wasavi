@@ -1,9 +1,10 @@
-import { useLocalData } from "../../hooks/useLocalData";
+import { useRestaurants } from "../../hooks/useRestaurants";
 import { RestaurantCard } from "./RestaurantCard";
 
 export const RestaurantsList = () => {
-  const { getLocalData } = useLocalData();
-  const restaurants = getLocalData().restaurants;
+  const { restaurants, loading } = useRestaurants();
+
+  if (loading) return <></>;
 
   return (
     <div className="w-full h-full">

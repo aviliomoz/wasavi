@@ -16,6 +16,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { SuppliesPage } from "./pages/SuppliesPage";
 import { ProductsPage } from "./pages/ProductsPage";
+import { ConverterPage } from "./pages/ConverterPage";
 
 export const App = () => {
   return (
@@ -47,7 +48,7 @@ export const App = () => {
             <Route path="new" element={<p>New product</p>} />
             <Route path="edit/:id" element={<p>Edit product</p>} />
           </Route>
-          <Route path="/converter" element={<p>Converter</p>} />
+          <Route path="/converter" element={<ConverterPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,58 +1,19 @@
-export enum UMEnum {
-  UND = "UND",
-  KG = "KG",
-  LT = "LT",
-}
-
-export const getFullUM = (
-  amount: number,
-  um: UMEnum,
-  showAmount: boolean = true
-): string => {
-  switch (um) {
-    case UMEnum.UND:
-      return amount === 1
-        ? `${showAmount ? amount : ""} Unidad (Und.)`
-        : `${showAmount ? amount : ""} Unidades (Und.)`;
-    case UMEnum.KG:
-      return amount === 1
-        ? `${showAmount ? amount : ""} Kilogramo (Kg.)`
-        : `${showAmount ? amount : ""} Kilogramos (Kg.)`;
-    case UMEnum.LT:
-      return amount === 1
-        ? `${showAmount ? amount : ""} Litro (Lt.)`
-        : `${showAmount ? amount : ""} Litros (Lt.)`;
-
-    default:
-      return "";
-  }
-};
-
-// ------------------------------
+import { AlertEnum, CurrencyEnum, UMEnum } from "./enums";
 
 export interface Alert {
-  type: "success" | "error" | null;
+  type: AlertEnum | undefined;
   message: string | undefined;
-}
-
-export enum Currency {
-  USD = "USD",
-  EUR = "EUR",
-  PEN = "PEN",
 }
 
 export interface Validation {
   validated: boolean;
-  message: string;
+  message: string | undefined;
 }
 
 export interface Product {
   id: string;
   name: string;
   category: string;
-  categories: {
-    name: string;
-  };
   restaurant: string;
   um: UMEnum;
   amount: number;
@@ -64,9 +25,6 @@ export interface Supply {
   id: string;
   name: string;
   category: string;
-  categories: {
-    name: string;
-  };
   restaurant: string;
   um: UMEnum;
   waste: number;
@@ -74,8 +32,27 @@ export interface Supply {
   taxes_included: boolean;
 }
 
+export interface User {
+  id: string;
+  name: string;
+}
+
+export interface Restaurant {
+  id: string;
+  name: string;
+}
+
 export interface LocalData {
   user: string;
   restaurant: string;
-  restaurants: string[] | [];
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface Item {
+  id: string;
+  name: string;
 }

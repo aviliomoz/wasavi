@@ -1,8 +1,9 @@
-import { NextPage } from "next";
-import { AppLayout } from "../components/app/AppLayout";
+import { AppLayout } from "../components/ui/AppLayout";
 
-const ConverterPage: NextPage = () => {
-  return <AppLayout></AppLayout>;
+export const ConverterPage = () => {
+  return (
+    <AppLayout>
+      <h1>Converter page</h1>
+    </AppLayout>
+  );
 };
-
-export default ConverterPage;

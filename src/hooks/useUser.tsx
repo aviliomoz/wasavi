@@ -1,31 +1,43 @@
 import { useEffect, useState } from "react";
+
+// Services
 import { supabase } from "../services/supabase";
 
-interface User {
-  id: string;
-  name: string;
-}
+// Types
+import { User } from "../types/interfaces";
 
-export const useUser = (id: string) => {
-  const [user, setUser] = useState<User>();
+//Hooks
+import { useLocalData } from "./useLocalData";
+
+export const useUser = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const { user: auth_id } = useLocalData();
 
   useEffect(() => {
-    getUser().then(setUser);
+    getUser()
+      .then(setUser)
+      .then(() => setLoading(false));
   }, []);
 
-  const getUser = async (): Promise<User> => {
-    const { data, error } = await supabase
-      .from("users")
-      .select("auth_id, name")
-      .eq("auth_id", id)
-      .single();
+  const getUser = async (): Promise<User | null> => {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("id, name")
+        .eq("auth_id", auth_id)
+        .single();
 
-    if (error || !data) {
-      return { id, name: "Cargando..." };
+      if (error) throw new Error("Error al cargar los detalles del usuario");
+
+      if (!data) return null;
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
-
-    return { id, name: data.name };
   };
 
-  return { user };
+  return { user, loading } as const;
 };

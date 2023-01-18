@@ -4,15 +4,15 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 interface Props {
-  target: "supplies" | "products";
+  type: "supplies" | "products";
 }
 
-const getPlaceHolder = (target: string) => {
-  if (target === "supplies") return "Buscar insumo";
-  if (target === "products") return "Buscar producto";
+const getPlaceHolder = (type: string) => {
+  if (type === "supplies") return "Buscar insumo";
+  if (type === "products") return "Buscar producto";
 };
 
-export const SearchBar = ({ target }: Props) => {
+export const SearchBar = ({ type }: Props) => {
   const [search, setSearch] = useState("");
 
   return (
@@ -21,7 +21,7 @@ export const SearchBar = ({ target }: Props) => {
       <input
         type="text"
         className="form-input px-3 py-0 w-full font-normal text-sm border-none focus:ring-0"
-        placeholder={getPlaceHolder(target)}
+        placeholder={getPlaceHolder(type)}
         onChange={(e) => setSearch(e.target.value)}
         value={search}
       />

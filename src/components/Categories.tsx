@@ -1,46 +1,15 @@
-import { useState, useEffect } from "react";
-
 // Icons
 import { FaPlus, FaPen } from "react-icons/fa";
 
-// Utils
-import { supabase } from "../services/supabase";
-import { useLocalData } from "../hooks/useLocalData";
-
-interface Category {
-  name: string;
-  id: string;
-}
+// Hooks
+import { useCategories } from "../hooks/useCategories";
 
 interface Props {
-  target: "supplies" | "products";
+  type: "supplies" | "products";
 }
 
-export const Categories = ({ target }: Props) => {
-  const { getLocalData } = useLocalData();
-  const [categories, setCategories] = useState<Category[] | []>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getCategories().then((data) => {
-      setCategories(data);
-      setLoading(false);
-    });
-  }, []);
-
-  const getCategories = async (): Promise<Category[] | []> => {
-    const restaurantID = getLocalData().restaurant;
-
-    const { data, error } = await supabase
-      .from("categories")
-      .select("id, name")
-      .eq("restaurant", restaurantID)
-      .eq("type", target);
-
-    if (error || !data) return [];
-
-    return data;
-  };
+export const Categories = ({ type }: Props) => {
+  const { categories, loading } = useCategories(type);
 
   if (loading) return <span>Cargando...</span>;
 
@@ -53,7 +22,7 @@ export const Categories = ({ target }: Props) => {
         </button>
       </div>
       <ul className="w-full">
-        {categories?.sort().map((category) => {
+        {categories.sort().map((category) => {
           return (
             <li
               key={category.id}

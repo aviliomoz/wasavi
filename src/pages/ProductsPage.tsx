@@ -15,7 +15,7 @@ export const ProductsPage = () => {
     <AppLayout>
       <header className="w-full p-4 flex items-center justify-between">
         <section className="w-2/5 flex items-center justify-start">
-          <SearchBar target="products" />
+          <SearchBar type="products" />
         </section>
         <section className="w-3/5 flex items-center justify-end space-x-2">
           <AddButton path="/products/new" text="Nuevo producto" />
@@ -26,10 +26,10 @@ export const ProductsPage = () => {
       </header>
       <section className="w-full flex space-x-4 px-4 pt-0 pb-4">
         <Board width="w-1/6" title="Filtros">
-          <Categories target="products" />
+          <Categories type="products" />
         </Board>
         <Board width="w-2/6" title="Lista de productos" fullSize={true}>
-          <ItemsList target="products" />
+          <ItemsList type="products" />
         </Board>
         <Board width="w-3/6" title="Detalles del producto">
           <Outlet />

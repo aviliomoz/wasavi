@@ -8,21 +8,21 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { useAuth } from "../../hooks/useAuth";
-import { useLocalData } from "../../hooks/useLocalData";
 
 // Hooks
 import { useUser } from "../../hooks/useUser";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {
   showName?: boolean;
 };
 
 export const UserPill = ({ showName = true }: Props) => {
-  const { getLocalData } = useLocalData();
-  const { user } = useUser(getLocalData().user);
+  const { user, loading } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
+
+  if (loading) return <></>;
 
   return (
     <>

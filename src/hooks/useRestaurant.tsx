@@ -1,31 +1,40 @@
 import { useEffect, useState } from "react";
+
+// Services
 import { supabase } from "../services/supabase";
 
-interface Restaurant {
-  id: string;
-  name: string;
-}
+// Types
+import { Restaurant } from "../types/interfaces";
 
 export const useRestaurant = (id: string) => {
-  const [restaurant, setRestaurant] = useState<Restaurant>();
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getRestaurant().then(setRestaurant);
+    getRestaurant()
+      .then(setRestaurant)
+      .then(() => setLoading(false));
   }, []);
 
-  const getRestaurant = async (): Promise<Restaurant> => {
-    const { data, error } = await supabase
-      .from("restaurants")
-      .select("id, name")
-      .eq("id", id)
-      .single();
+  const getRestaurant = async (): Promise<Restaurant | null> => {
+    try {
+      const { data, error } = await supabase
+        .from("restaurants")
+        .select("id, name")
+        .eq("id", id)
+        .single();
 
-    if (error || !data) {
-      return { id, name: "Cargando..." };
+      if (error)
+        throw new Error("Error al cargar los detalles del restaurante");
+
+      if (!data) return null;
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
-
-    return data;
   };
 
-  return { restaurant };
+  return { restaurant, loading } as const;
 };

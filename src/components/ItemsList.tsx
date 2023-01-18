@@ -1,49 +1,21 @@
-import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
-// Components
-import { supabase } from "../services/supabase";
-import { useLocalData } from "../hooks/useLocalData";
-
-interface Item {
-  id: string;
-  name: string;
-}
+import { useItems } from "../hooks/useItems";
 
 interface Props {
-  target: "supplies" | "products";
+  type: "supplies" | "products";
 }
 
-export const ItemsList = ({ target }: Props) => {
-  const { getLocalData } = useLocalData();
-  const [items, setItems] = useState<Item[] | []>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getItems().then(setItems);
-    setLoading(false);
-  }, []);
-
-  const getItems = async (): Promise<Item[] | []> => {
-    const restaurantID = getLocalData().restaurant;
-    const { data, error } = await supabase
-      .from(target)
-      .select("id, name")
-      .eq("restaurant", restaurantID);
-
-    if (error || !data) return [];
-
-    return data;
-  };
+export const ItemsList = ({ type }: Props) => {
+  const { items, loading } = useItems(type);
 
   if (loading) return <span>Cargando...</span>;
 
   return (
     <div>
-      {items?.sort().map((item) => {
+      {items.sort().map((item) => {
         return (
           <NavLink
-            to={`/${target}/${item.id}`}
+            to={`/${type}/${item.id}`}
             key={item.id}
             className="group flex items-center cursor-pointer mb-2"
           >
