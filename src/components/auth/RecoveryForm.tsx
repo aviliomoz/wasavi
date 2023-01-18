@@ -4,16 +4,13 @@ import { useAuth } from "../../hooks/useAuth";
 
 export const RecoveryForm = () => {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const { recovery } = useAuth();
+  const { recovery, loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setLoading(true);
     await recovery(email);
-    setLoading(false);
   };
 
   return (

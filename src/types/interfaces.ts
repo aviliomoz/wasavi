@@ -1,12 +1,10 @@
-import { AlertEnum, CurrencyEnum, UMEnum } from "./enums";
-
 export interface Alert {
-  type: AlertEnum | undefined;
+  type: "ERROR" | "SUCCESS" | undefined;
   message: string | undefined;
 }
 
 export interface Validation {
-  validated: boolean;
+  ok: boolean;
   message: string | undefined;
 }
 
@@ -15,7 +13,7 @@ export interface Product {
   name: string;
   category: string;
   restaurant: string;
-  um: UMEnum;
+  um: "UND" | "KG" | "LT";
   amount: number;
   price: number;
   is_for_sale: boolean;
@@ -26,7 +24,7 @@ export interface Supply {
   name: string;
   category: string;
   restaurant: string;
-  um: UMEnum;
+  um: "UND" | "KG" | "LT";
   waste: number;
   price: number;
   taxes_included: boolean;

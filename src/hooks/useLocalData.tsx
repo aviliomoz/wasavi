@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Types
 import { LocalData } from "../types/interfaces";

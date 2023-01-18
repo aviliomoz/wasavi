@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../services/supabase";
-import { useNavigate, Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export const PrivateRoute = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const { session, loading } = useAuth();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) return navigate("/login");
-      setLoading(false);
-    });
-  }, []);
+  if (!loading && !session) return <Navigate to={"/login"} />;
 
   return !loading ? <>{<Outlet />}</> : <></>;
 };

@@ -6,16 +6,13 @@ export const SignupForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const { signup } = useAuth();
+  const { signup, loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setLoading(true);
     await signup(name, email, password);
-    setLoading(false);
   };
 
   return (

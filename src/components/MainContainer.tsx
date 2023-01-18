@@ -1,6 +1,6 @@
-import { redirect } from "react-router-dom";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { Outlet } from "react-router-dom";
 
 // Utils
 import { alertState } from "../contexts/alertState";
@@ -8,24 +8,8 @@ import { alertState } from "../contexts/alertState";
 // Components
 import { AlertBox } from "./ui/AlertBox";
 
-// Hooks
-import { useAuth } from "../hooks/useAuth";
-
-interface Props {
-  children: JSX.Element | JSX.Element[];
-}
-
-export const MainContainer = ({ children }: Props) => {
+export const MainContainer = () => {
   const [alert, setAlert] = useRecoilState(alertState);
-  const { session, loading, logout } = useAuth();
-
-  useEffect(() => {
-    if (!loading) {
-      if (!session) {
-        logout();
-      }
-    }
-  }, [loading, session]);
 
   useEffect(() => {
     if (alert.message) {
@@ -38,12 +22,10 @@ export const MainContainer = ({ children }: Props) => {
     }
   }, [alert]);
 
-  return !loading ? (
+  return (
     <main className="w-full min-h-screen relative">
-      {children}
+      <Outlet />
       <AlertBox />
     </main>
-  ) : (
-    <></>
   );
 };
