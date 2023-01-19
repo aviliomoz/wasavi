@@ -1,13 +1,9 @@
-import { useRecoilValue } from "recoil";
-
-// Utils
-import { alertState } from "../../contexts/alertState";
-
 // Icons
 import { FaExclamationCircle, FaCheck } from "react-icons/fa";
+import { useAlert } from "../../hooks/useAlert";
 
 export const AlertBox = () => {
-  const alert = useRecoilValue(alertState);
+  const { alert } = useAlert();
 
   if (!alert.message) return <></>;
 

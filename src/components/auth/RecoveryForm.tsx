@@ -20,7 +20,7 @@ export const RecoveryForm = () => {
     >
       <h2 className="mb-8 font-bold text-2xl">Recuperar contraseña</h2>
       <p className="text-center font-light text-sm px-6 text-gray-500 mb-5">
-        Se enviará a tu correo un enlace con un token de recuperación
+        Se enviará un correo con un enlace de recuperación
       </p>
       <input
         type="email"

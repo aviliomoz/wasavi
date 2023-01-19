@@ -13,17 +13,14 @@ import {
   validateRecovery,
   validateSignup,
 } from "../utils/validators";
-
-//Recoil
-import { useSetRecoilState } from "recoil";
-import { alertState } from "../contexts/alertState";
+import { useAlert } from "./useAlert";
 
 export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { cleanLocalData, updateUser } = useLocalData();
 
-  const setAlert = useSetRecoilState(alertState);
+  const { showAlertBox } = useAlert();
 
   useEffect(() => {
     getSession()
@@ -74,7 +71,7 @@ export const useAuth = () => {
     const validation = validateLogin(email, password);
 
     if (!validation.ok) {
-      return setAlert({ type: "ERROR", message: validation.message });
+      return showAlertBox({ type: "ERROR", message: validation.message });
     }
 
     setLoading(true);
@@ -90,7 +87,7 @@ export const useAuth = () => {
       document.location.assign("/home");
     } catch (error) {
       console.error(error);
-      setAlert({
+      showAlertBox({
         type: "ERROR",
         message: "Los datos ingresados son inválidos",
       });
@@ -102,7 +99,7 @@ export const useAuth = () => {
     const validation = validateSignup(name, email, password);
 
     if (!validation.ok) {
-      return setAlert({ type: "ERROR", message: validation.message });
+      return showAlertBox({ type: "ERROR", message: validation.message });
     }
 
     setLoading(true);
@@ -113,7 +110,7 @@ export const useAuth = () => {
       } = await supabase.auth.signUp({ email, password });
 
       if (error || !user)
-        return setAlert({
+        return showAlertBox({
           type: "ERROR",
           message: "Ha ocurrido un error al registrar el usuario",
         });
@@ -136,7 +133,7 @@ export const useAuth = () => {
     const validation = validateRecovery(email);
 
     if (!validation.ok) {
-      return setAlert({ type: "ERROR", message: validation.message });
+      return showAlertBox({ type: "ERROR", message: validation.message });
     }
 
     setLoading(true);
@@ -144,12 +141,12 @@ export const useAuth = () => {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email);
 
       if (error || !data)
-        return setAlert({
+        return showAlertBox({
           type: "ERROR",
           message: "Ha ocurrido un error al enviar el correo de recuperación",
         });
 
-      return setAlert({
+      return showAlertBox({
         type: "SUCCESS",
         message: `Se ha enviado un correo de recuperación a: ${email}`,
       });
