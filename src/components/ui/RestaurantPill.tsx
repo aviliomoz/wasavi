@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 
 // Hooks
-import { useRestaurant } from "../../hooks/useRestaurant";
 import { useLocalData } from "../../hooks/useLocalData";
 
 type Props = {
@@ -18,11 +17,8 @@ type Props = {
 };
 
 export const RestaurantPill = ({ showName = true }: Props) => {
-  const { restaurant: id } = useLocalData();
-  const { restaurant, loading } = useRestaurant(id);
+  const { restaurant } = useLocalData();
   const [isOpen, setIsOpen] = useState(false);
-
-  if (loading) return <></>;
 
   return (
     <button

@@ -15,17 +15,21 @@ export const useItems = (type: "supplies" | "products") => {
   const { restaurant } = useLocalData();
 
   useEffect(() => {
-    getItems()
-      .then(setItems)
-      .then(() => setLoading(false));
+    getItems().then(setItems);
   }, []);
+
+  useEffect(() => {
+    if (items) {
+      setLoading(false);
+    }
+  }, [items]);
 
   const getItems = async (): Promise<Item[]> => {
     try {
       const { data, error } = await supabase
         .from(type)
         .select("id, name")
-        .eq("restaurant", restaurant);
+        .eq("restaurant", restaurant?.id);
 
       if (error) throw new Error("Error al cargar lista de items");
 

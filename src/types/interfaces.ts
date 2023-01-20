@@ -8,12 +8,14 @@ export interface Validation {
   message: string | undefined;
 }
 
+export type UM = "KG" | "LT" | "UND" | undefined;
+
 export interface Product {
   id: string;
   name: string;
   category: string;
   restaurant: string;
-  um: "UND" | "KG" | "LT";
+  um: UM;
   amount: number;
   price: number;
   is_for_sale: boolean;
@@ -24,7 +26,7 @@ export interface Supply {
   name: string;
   category: string;
   restaurant: string;
-  um: "UND" | "KG" | "LT";
+  um: UM;
   waste: number;
   price: number;
   taxes_included: boolean;
@@ -35,14 +37,17 @@ export interface User {
   name: string;
 }
 
+export type Currency = "USD" | "EUR" | "PEN" | undefined;
+
 export interface Restaurant {
   id: string;
   name: string;
+  currency: Currency;
 }
 
 export interface LocalData {
-  user: string;
-  restaurant: string;
+  user: string | undefined;
+  restaurant: Restaurant | undefined;
 }
 
 export interface Category {

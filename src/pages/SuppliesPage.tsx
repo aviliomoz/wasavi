@@ -1,10 +1,10 @@
 // Components
 import { AppLayout } from "../components/ui/AppLayout";
 import { Categories } from "../components/Categories";
-import { ItemsList } from "../components/ItemsList";
+import { ItemsList } from "../components/ui/ItemsList";
 import { DownloadButton } from "../components/DownloadButton";
 import { RestaurantPill } from "../components/ui/RestaurantPill";
-import { AddButton } from "../components/AddButton";
+import { AddButton } from "../components/ui/AddButton";
 import { SearchBar } from "../components/SearchBar";
 import { Board } from "../components/ui/Board";
 import { UserPill } from "../components/ui/UserPill";

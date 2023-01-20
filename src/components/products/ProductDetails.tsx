@@ -1,53 +1,22 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../supabase";
+import { useParams, Link } from "react-router-dom";
 
-// Types
-import { Currency, getFullUM, UMEnum } from "../../types/interfaces";
+// Components
 import { RecipeBox } from "./RecipeBox";
-import { useRouter } from "next/router";
-import { getCurrencySymbol } from "../../functions/currency";
 
-import { Product } from "../../types/interfaces";
-import { getLocalData } from "../../functions/local";
+// Hooks
+import { useLocalData } from "../../hooks/useLocalData";
+import { useProduct } from "../../hooks/useProduct";
+
+// Functions
+import { getCurrencySymbol } from "../../functions/getCurrencySymbol";
+import { getFullUM } from "../../functions/getfullUM";
 
 export const ProductDetails = () => {
-  const router = useRouter();
+  const { id } = useParams();
+  const { restaurant } = useLocalData();
+  const { product, loading } = useProduct(id);
 
-  const [details, setDetails] = useState<Product>();
-  const [currency, setCurrency] = useState<Currency>(Currency.USD);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    if (router.query.id) {
-      getProductDetails().then((res) => {
-        setDetails(res);
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
-      });
-    }
-  }, [router.query.id]);
-
-  useEffect(() => {
-    setCurrency(getLocalData().restaurant?.currency || Currency.USD);
-  }, []);
-
-  const getProductDetails = async () => {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*, categories(name)")
-      .eq("id", router.query.id)
-      .single();
-
-    return data;
-  };
-
-  if (!router.query.id) {
-    return <div>Selecciona un producto</div>;
-  }
-
-  if (loading) {
+  if (loading || !product || !id || !restaurant) {
     return <span>Cargando...</span>;
   }
 
@@ -55,35 +24,29 @@ export const ProductDetails = () => {
     <div className="flex flex-col space-y-1 items-start">
       <p>
         <strong className="mr-2">Nombre: </strong>
-        {details?.name}
+        {product.name}
       </p>
       <p>
         <strong className="mr-2">Categoría: </strong>
-        {details?.categories.name}
+        {product.category?.name}
       </p>
       <p>
         <strong className="mr-2">Se vende: </strong>
-        {details?.is_for_sale ? "Sí" : "No"}
+        {product.is_for_sale ? "Sí" : "No"}
       </p>
-      {details?.is_for_sale && (
+      {product.is_for_sale && (
         <p>
           <strong className="mr-2">Precio de venta: </strong>
-          {getCurrencySymbol(currency)} {details.price}
+          {getCurrencySymbol(restaurant.currency)} {product.price}
         </p>
       )}
       <hr style={{ margin: "20px 0px", width: "100%" }} />
       <p>
         <strong className="mr-2">Receta para: </strong>
-        {details?.amount && getFullUM(details?.amount, details?.um)}
+        {product.amount} {getFullUM(product.um)}
       </p>
       <RecipeBox />
-      <button
-        onClick={() =>
-          router.push(`${router.pathname}?id=${router.query.id}&action=edit`)
-        }
-      >
-        Editar producto
-      </button>
+      <Link to={`/products/edit/${id}`}>Editar producto</Link>
     </div>
   );
 };

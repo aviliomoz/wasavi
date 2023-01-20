@@ -10,6 +10,7 @@ import { LoginForm } from "./components/auth/LoginForm";
 import { RecoveryForm } from "./components/auth/RecoveryForm";
 import { SignupForm } from "./components/auth/SignupForm";
 import { RestaurantsList } from "./components/restaurant/RestaurantsList";
+import { EmptyItem } from "./components/ui/EmptyItem";
 
 // Pages
 import { LandingPage } from "./pages/LandingPage";
@@ -17,6 +18,8 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { SuppliesPage } from "./pages/SuppliesPage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { ConverterPage } from "./pages/ConverterPage";
+import { SupplyDetails } from "./components/supplies/SupplyDetails";
+import { ProductDetails } from "./components/products/ProductDetails";
 
 export const App = () => {
   return (
@@ -37,14 +40,14 @@ export const App = () => {
           </Route>
           <Route element={<PrivateRoute />}>
             <Route path="/supplies/*" element={<SuppliesPage />}>
-              <Route path="" element={<p>Selecciona un insumo</p>} />
-              <Route path=":id" element={<p>Detalles del insumo (x)</p>} />
+              <Route path="" element={<EmptyItem />} />
+              <Route path=":id" element={<SupplyDetails />} />
               <Route path="new" element={<p>New supply</p>} />
               <Route path="edit/:id" element={<p>Edit supply</p>} />
             </Route>
             <Route path="/products/*" element={<ProductsPage />}>
-              <Route path="" element={<p>Selecciona un producto</p>} />
-              <Route path=":id" element={<p>Detalles del producto (x)</p>} />
+              <Route path="" element={<EmptyItem />} />
+              <Route path=":id" element={<ProductDetails />} />
               <Route path="new" element={<p>New product</p>} />
               <Route path="edit/:id" element={<p>Edit product</p>} />
             </Route>

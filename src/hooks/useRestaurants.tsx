@@ -12,10 +12,14 @@ export const useRestaurants = () => {
   const { user } = useLocalData();
 
   useEffect(() => {
-    getRestaurants()
-      .then(setRestaurants)
-      .then(() => setLoading(false));
+    getRestaurants().then(setRestaurants);
   }, []);
+
+  useEffect(() => {
+    if (restaurants) {
+      setLoading(false);
+    }
+  }, [restaurants]);
 
   const getRestaurants = async (): Promise<string[]> => {
     try {

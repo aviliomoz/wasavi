@@ -6,21 +6,25 @@ import { supabase } from "../services/supabase";
 // Types
 import { Restaurant } from "../types/interfaces";
 
-export const useRestaurant = (id: string) => {
+export const useRestaurant = (id: string | undefined) => {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getRestaurant()
-      .then(setRestaurant)
-      .then(() => setLoading(false));
+    getRestaurant().then(setRestaurant);
   }, []);
+
+  useEffect(() => {
+    if (restaurant) {
+      setLoading(false);
+    }
+  }, [restaurant]);
 
   const getRestaurant = async (): Promise<Restaurant | null> => {
     try {
       const { data, error } = await supabase
         .from("restaurants")
-        .select("id, name")
+        .select("id, name, currency")
         .eq("id", id)
         .single();
 

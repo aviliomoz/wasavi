@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useItems } from "../hooks/useItems";
+import { useItems } from "../../hooks/useItems";
 
 interface Props {
   type: "supplies" | "products";

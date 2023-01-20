@@ -15,10 +15,14 @@ export const useUser = () => {
   const { user: auth_id } = useLocalData();
 
   useEffect(() => {
-    getUser()
-      .then(setUser)
-      .then(() => setLoading(false));
+    getUser().then(setUser);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+  }, [user]);
 
   const getUser = async (): Promise<User | null> => {
     try {

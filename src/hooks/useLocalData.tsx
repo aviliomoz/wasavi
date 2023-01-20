@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 // Types
-import { LocalData } from "../types/interfaces";
+import { LocalData, Restaurant } from "../types/interfaces";
 
 const initialData: LocalData = {
   user: "",
-  restaurant: "",
+  restaurant: undefined,
 };
 
 export const useLocalData = (key: string = "wasavi_data") => {
@@ -17,7 +17,7 @@ export const useLocalData = (key: string = "wasavi_data") => {
     localStorage.setItem(key, JSON.stringify({ ...data, user }));
   };
 
-  const updateRestaurant = (restaurant: string) => {
+  const updateRestaurant = (restaurant: Restaurant) => {
     localStorage.setItem(key, JSON.stringify({ ...data, restaurant }));
   };
 
