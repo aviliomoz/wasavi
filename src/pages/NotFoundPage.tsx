@@ -1,5 +1,4 @@
 import { Logo } from "../components/ui/Logo";
-import { Link } from "react-router-dom";
 
 export const NotFoundPage = () => {
   return (
@@ -13,12 +12,12 @@ export const NotFoundPage = () => {
         <p className="font-light">
           La página web a la que estas tratando de acceder no existe
         </p>
-        <Link
-          className="bg-emerald-500 text-white py-4 px-8 mt-8 rounded-sm text-lg"
-          to="/"
+        <a
+          className="bg-emerald-500 text-white py-3 px-6 mt-8 rounded-sm text-lg"
+          href="/"
         >
           Volver al inicio
-        </Link>
+        </a>
       </div>
     </div>
   );

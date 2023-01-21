@@ -14,7 +14,7 @@ export const RestaurantCard = ({ id }: Props) => {
 
   return (
     <Link
-      className="border border-gray-200 rounded-md p-6 font-medium flex space-x-4 mb-2 items-center"
+      className="w-1/3 border border-gray-200 rounded-sm p-6 font-medium flex space-x-4 mb-2 items-center"
       onClick={() => updateRestaurant(restaurant)}
       to="/products"
     >

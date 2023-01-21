@@ -17,7 +17,7 @@ export const Categories = ({ type }: Props) => {
     <div>
       <div className="flex items-center justify-between mb-2">
         <h3 className="font-medium">Categorías</h3>
-        <button className="bg-emerald-500 p-1 rounded-md text-white text-xs">
+        <button className="bg-emerald-500 p-1 rounded-sm text-white text-xs">
           <FaPlus />
         </button>
       </div>

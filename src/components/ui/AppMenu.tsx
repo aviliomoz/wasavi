@@ -38,8 +38,8 @@ export const AppMenu = () => {
         return (
           <NavLink
             className={({ isActive }) =>
-              `flex items-center space-x-3 mb-1 py-2 px-4 rounded-md ${
-                isActive ? "bg-emerald-500" : " hover:bg-gray-50"
+              `flex items-center space-x-3 mb-1 py-2 px-4 rounded-sm ${
+                isActive ? "bg-emerald-500" : ""
               }`
             }
             to={option.path}

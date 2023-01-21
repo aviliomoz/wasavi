@@ -23,7 +23,7 @@ export const ItemsList = ({ type }: Props) => {
               return (
                 <>
                   <div
-                    className={`h-2  rounded-sm group-hover:w-4 mr-2 transition-all ${
+                    className={`h-2 rounded-sm group-hover:w-4 mr-2 transition-all ${
                       isActive ? "w-4 bg-emerald-500" : "w-2 bg-gray-300"
                     }`}
                   ></div>

@@ -12,7 +12,7 @@ export const AddButton = ({ path, text }: Props) => {
   return (
     <Link
       to={path}
-      className="bg-emerald-500 text-white font-normal text-sm px-12 py-1 flex items-center rounded-md space-x-2"
+      className="bg-emerald-500 text-white font-normal text-sm px-8 py-2 flex items-center rounded-sm space-x-3"
     >
       <i>
         <FaPlusCircle />

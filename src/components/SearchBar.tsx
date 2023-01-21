@@ -3,25 +3,16 @@ import { useState } from "react";
 // Icons
 import { FaSearch } from "react-icons/fa";
 
-interface Props {
-  type: "supplies" | "products";
-}
-
-const getPlaceHolder = (type: string) => {
-  if (type === "supplies") return "Buscar insumo";
-  if (type === "products") return "Buscar producto";
-};
-
-export const SearchBar = ({ type }: Props) => {
+export const SearchBar = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="w-full flex items-center rounded-md overflow-hidden bg-white px-4 py-1 shadow-sm">
-      <FaSearch className="fill-gray-400" />
+    <div className="w-full flex items-center rounded-full bg-white px-6 py-2 border space-x-3">
+      <FaSearch className="fill-gray-300" />
       <input
         type="text"
-        className="form-input px-3 py-0 w-full font-normal text-sm border-none focus:ring-0"
-        placeholder={getPlaceHolder(type)}
+        className="w-full font-thin text-sm outline-none"
+        placeholder="Buscar productos o insumos"
         onChange={(e) => setSearch(e.target.value)}
         value={search}
       />

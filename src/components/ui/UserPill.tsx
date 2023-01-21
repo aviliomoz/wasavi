@@ -27,7 +27,7 @@ export const UserPill = ({ showName = true }: Props) => {
   return (
     <button
       onClick={() => setIsOpen(!isOpen)}
-      className="relative bg-white py-1 px-3 text-sm font-normal rounded-md shadow-sm flex space-x-2 items-center"
+      className="relative bg-white py-2 px-4 text-sm rounded-full border flex space-x-2 items-center"
     >
       <FaUser className="fill-emerald-500" />
       {user && showName && (
@@ -35,7 +35,7 @@ export const UserPill = ({ showName = true }: Props) => {
       )}
       {isOpen ? <FaChevronUp /> : <FaChevronDown />}
       {isOpen && (
-        <ul className="z-10 text-sm absolute -bottom-20 right-0 bg-white p-2 rounded-md shadow-md">
+        <ul className="z-10 text-sm absolute -bottom-20 right-0 bg-white p-2 rounded-md border">
           <li className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm">
             <FaCog />
             <p className="min-w-max">Ajustes de usuario</p>

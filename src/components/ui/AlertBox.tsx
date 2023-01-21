@@ -9,7 +9,7 @@ export const AlertBox = () => {
 
   return (
     <div
-      className={`absolute bottom-5 right-5 py-4 px-6 rounded-md text-white font-light flex items-center space-x-3 ${
+      className={`absolute bottom-5 right-5 py-4 px-6 rounded-sm text-white font-light flex items-center space-x-3 ${
         alert.type === "ERROR"
           ? "bg-red-400"
           : alert.type === "SUCCESS"

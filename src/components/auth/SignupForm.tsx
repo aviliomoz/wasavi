@@ -18,7 +18,7 @@ export const SignupForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full flex flex-col items-center justify-center"
+      className="w-80 h-max flex flex-col items-center justify-center"
     >
       <h2 className="mb-8 text-center font-bold text-2xl">Registro</h2>
       <input
@@ -27,7 +27,7 @@ export const SignupForm = () => {
         placeholder="Nombre"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="rounded-md border border-gray-300 py-2 px-4 mb-2 bg-white outline-none w-full"
+        className="rounded-sm border border-gray-300 py-2 px-4 mb-2 bg-white outline-none w-full"
       />
       <input
         type="email"
@@ -35,7 +35,7 @@ export const SignupForm = () => {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="rounded-md border border-gray-300 py-2 px-4 mb-2 bg-white outline-none w-full"
+        className="rounded-sm border border-gray-300 py-2 px-4 mb-2 bg-white outline-none w-full"
       />
       <input
         type="password"
@@ -43,11 +43,11 @@ export const SignupForm = () => {
         placeholder="Contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="rounded-md border border-gray-300 py-2 px-4 mb-2 bg-white outline-none w-full"
+        className="rounded-sm border border-gray-300 py-2 px-4 mb-2 bg-white outline-none w-full"
       />
       <button
         type="submit"
-        className="my-6 bg-emerald-500 py-2 text-white font-bold rounded-md w-full"
+        className="my-6 bg-emerald-500 py-2 text-white font-bold rounded-sm w-full"
         disabled={loading}
       >
         {loading ? "Registrando datos..." : "Crear cuenta"}

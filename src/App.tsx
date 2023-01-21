@@ -20,6 +20,7 @@ import { ProductsPage } from "./pages/ProductsPage";
 import { ConverterPage } from "./pages/ConverterPage";
 import { SupplyDetails } from "./components/supplies/SupplyDetails";
 import { ProductDetails } from "./components/products/ProductDetails";
+import { AppLayout } from "./components/ui/AppLayout";
 
 export const App = () => {
   return (
@@ -38,20 +39,22 @@ export const App = () => {
               <Route path="recovery" element={<RecoveryForm />} />
             </Route>
           </Route>
-          <Route element={<PrivateRoute />}>
-            <Route path="/supplies/*" element={<SuppliesPage />}>
-              <Route path="" element={<EmptyItem />} />
-              <Route path=":id" element={<SupplyDetails />} />
-              <Route path="new" element={<p>New supply</p>} />
-              <Route path="edit/:id" element={<p>Edit supply</p>} />
+          <Route element={<AppLayout />}>
+            <Route element={<PrivateRoute />}>
+              <Route path="/supplies/*" element={<SuppliesPage />}>
+                <Route path="" element={<EmptyItem />} />
+                <Route path=":id" element={<SupplyDetails />} />
+                <Route path="new" element={<p>New supply</p>} />
+                <Route path="edit/:id" element={<p>Edit supply</p>} />
+              </Route>
+              <Route path="/products/*" element={<ProductsPage />}>
+                <Route path="" element={<EmptyItem />} />
+                <Route path=":id" element={<ProductDetails />} />
+                <Route path="new" element={<p>New product</p>} />
+                <Route path="edit/:id" element={<p>Edit product</p>} />
+              </Route>
+              <Route path="/converter" element={<ConverterPage />} />
             </Route>
-            <Route path="/products/*" element={<ProductsPage />}>
-              <Route path="" element={<EmptyItem />} />
-              <Route path=":id" element={<ProductDetails />} />
-              <Route path="new" element={<p>New product</p>} />
-              <Route path="edit/:id" element={<p>Edit product</p>} />
-            </Route>
-            <Route path="/converter" element={<ConverterPage />} />
           </Route>
         </Route>
       </Routes>

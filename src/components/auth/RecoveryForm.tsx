@@ -16,7 +16,7 @@ export const RecoveryForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full flex flex-col items-center justify-center"
+      className="w-80 h-max flex flex-col items-center justify-center"
     >
       <h2 className="mb-8 font-bold text-2xl">Recuperar contraseña</h2>
       <p className="text-center font-light text-sm px-6 text-gray-500 mb-5">
@@ -28,12 +28,12 @@ export const RecoveryForm = () => {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="rounded-md border border-gray-300 py-2 px-4 bg-white outline-none w-full"
+        className="rounded-sm border border-gray-300 py-2 px-4 bg-white outline-none w-full"
       />
 
       <button
         type="submit"
-        className="my-6 bg-emerald-500 py-2 text-white font-bold rounded-md w-full"
+        className="my-6 bg-emerald-500 py-2 text-white font-bold rounded-sm w-full"
       >
         {loading ? "Validando datos..." : "Enviar correo"}
       </button>
