@@ -1,54 +1,34 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Icons
-import {
-  FaUser,
-  FaChevronDown,
-  FaChevronUp,
-  FaCog,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
 
 // Hooks
-import { useUser } from "../../hooks/useUser";
 import { useAuth } from "../../hooks/useAuth";
+import { useUser } from "../../hooks/useUser";
 
-type Props = {
-  showName?: boolean;
-};
+// Components
+import { Pill } from "./Pill";
 
-export const UserPill = ({ showName = true }: Props) => {
-  const { user, loading } = useUser();
-  const [isOpen, setIsOpen] = useState(false);
+export const UserPill = () => {
+  const navigate = useNavigate();
   const { logout } = useAuth();
+  const { user } = useUser();
 
-  if (loading || !user) return <></>;
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
+
+  if (!user) return <></>;
 
   return (
-    <button
-      onClick={() => setIsOpen(!isOpen)}
-      className="relative bg-white py-2 px-4 text-sm rounded-full border flex space-x-2 items-center"
-    >
-      <FaUser className="fill-emerald-500" />
-      {user && showName && (
-        <p className="max-w-[100px] truncate">{user.name}</p>
-      )}
-      {isOpen ? <FaChevronUp /> : <FaChevronDown />}
-      {isOpen && (
-        <ul className="z-10 text-sm absolute -bottom-20 right-0 bg-white p-2 rounded-md border">
-          <li className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm">
-            <FaCog />
-            <p className="min-w-max">Ajustes de usuario</p>
-          </li>
-          <li
-            onClick={() => logout()}
-            className="flex items-center justify-end space-x-2 hover:bg-gray-50 py-1 px-2 rounded-sm"
-          >
-            <FaSignOutAlt />
-            <p className="min-w-max">Cerrar sesión</p>
-          </li>
-        </ul>
-      )}
-    </button>
+    <Pill
+      info={{ name: user.name, icon: FaUser }}
+      options={[
+        { name: "Ajustes de usuario", icon: FaCog, action: () => {} },
+        { name: "Cerrar sesión", icon: FaSignOutAlt, action: handleLogout },
+      ]}
+    />
   );
 };

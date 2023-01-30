@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 
 // Components
 import { Logo } from "../components/ui/Logo";
-import { UserPill } from "../components/ui/UserPill";
+import { Pill } from "../components/ui/Pill";
 
 // Hooks
 import { useAuth } from "../hooks/useAuth";
@@ -26,7 +26,8 @@ export const LandingPage = () => {
               </Link>
             </div>
           ) : (
-            <UserPill />
+            // <Pill />
+            <></>
           )}
         </div>
       </header>

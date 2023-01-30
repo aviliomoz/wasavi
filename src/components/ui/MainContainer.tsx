@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { AlertBox } from "./ui/AlertBox";
+import { AlertBox } from "./AlertBox";
 
 export const MainContainer = () => {
   return (

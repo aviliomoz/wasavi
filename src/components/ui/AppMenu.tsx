@@ -4,16 +4,21 @@ import { NavLink } from "react-router-dom";
 import { IconType } from "react-icons/lib";
 
 // Icons
-import { MdOutlineRamenDining } from "react-icons/md";
-import { FaFish, FaUtensils } from "react-icons/fa";
+import {
+  MdOutlineRamenDining,
+  MdOutlineShoppingBag,
+  MdOutlineInventory,
+  MdOutlineRiceBowl,
+  MdOutlinePayments
+} from "react-icons/md";
 
-interface Option {
+interface MenuOption {
   name: string;
   icon: IconType;
   path: string;
 }
 
-const options: Option[] = [
+const menu: MenuOption[] = [
   {
     name: "Productos",
     icon: MdOutlineRamenDining,
@@ -21,25 +26,35 @@ const options: Option[] = [
   },
   {
     name: "Insumos",
-    icon: FaFish,
+    icon: MdOutlineRiceBowl,
     path: "/supplies",
   },
   {
-    name: "Conversor",
-    icon: FaUtensils,
-    path: "/converter",
+    name: "Compras",
+    icon: MdOutlineShoppingBag,
+    path: "/purchases",
+  },
+  {
+    name: "Pagos",
+    icon: MdOutlinePayments,
+    path: "/payments",
+  },
+  {
+    name: "Almacén",
+    icon: MdOutlineInventory,
+    path: "/stock",
   },
 ];
 
 export const AppMenu = () => {
   return (
     <nav className="w-full">
-      {options.map((option, index) => {
+      {menu.map((option, index) => {
         return (
           <NavLink
             className={({ isActive }) =>
               `flex items-center space-x-3 mb-1 py-2 px-4 rounded-sm ${
-                isActive ? "bg-emerald-500" : ""
+                isActive ? "bg-emerald-500" : "hover:bg-gray-50"
               }`
             }
             to={option.path}
