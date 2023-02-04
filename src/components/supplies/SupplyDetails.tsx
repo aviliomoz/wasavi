@@ -28,7 +28,7 @@ export const SupplyDetails = () => {
       </p>
       <p>
         <strong className="mr-2">Categoría: </strong>
-        {supply.category?.name}
+        {supply.categories.name}
       </p>
       <p>
         <strong className="mr-2">Unidad de medida: </strong>

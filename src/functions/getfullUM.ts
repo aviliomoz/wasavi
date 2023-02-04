@@ -3,11 +3,11 @@ import { UM } from "../types/interfaces";
 export const getFullUM = (um: UM) => {
   switch (um) {
     case "KG":
-      return "Kilogramo (Kg.)";
+      return "Kilogramos";
     case "LT":
-      return "Litro (Lt.)";
+      return "Litros";
     case "UND":
-      return "Unidad (Und.)";
+      return "Unidad";
     default:
       return "-";
   }

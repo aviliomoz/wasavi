@@ -14,6 +14,7 @@ import { EmptyItem } from "./components/ui/EmptyItem";
 import { AppLayout } from "./components/ui/AppLayout";
 import { SupplyDetails } from "./components/supplies/SupplyDetails";
 import { ProductDetails } from "./components/products/ProductDetails";
+import { SupplyCreator } from "./components/supplies/SupplyCreator";
 
 // Pages
 import { LandingPage } from "./pages/LandingPage";
@@ -43,12 +44,9 @@ export const App = () => {
           </Route>
           <Route element={<PrivateRoute />}>
             <Route element={<AppLayout />}>
-              <Route path="/supplies/*" element={<SuppliesPage />}>
-                <Route path="" element={<EmptyItem />} />
-                <Route path=":id" element={<SupplyDetails />} />
-                <Route path="new" element={<p>New supply</p>} />
-                <Route path="edit/:id" element={<p>Edit supply</p>} />
-              </Route>
+              <Route path="/supplies" element={<SuppliesPage />} />
+              <Route path="/supplies/new" element={<SupplyCreator />} />
+              <Route path="/supplies/:id" element={<SupplyDetails />} />
               <Route path="/products/*" element={<ProductsPage />}>
                 <Route path="" element={<EmptyItem />} />
                 <Route path=":id" element={<ProductDetails />} />

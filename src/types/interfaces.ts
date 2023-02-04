@@ -25,11 +25,16 @@ export interface Supply {
   id: string;
   name: string;
   category: string;
+  categories: {
+    name: string;
+  };
   restaurant: string;
   um: UM;
   waste: number;
   price: number;
   taxes_included: boolean;
+  created_at: string;
+  status: boolean;
 }
 
 export interface User {
@@ -43,6 +48,8 @@ export interface Restaurant {
   id: string;
   name: string;
   currency: Currency;
+  buy_taxes: number;
+  sell_taxes: number;
 }
 
 export interface LocalData {

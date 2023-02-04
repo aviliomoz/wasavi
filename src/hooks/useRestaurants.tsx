@@ -27,7 +27,7 @@ export const useRestaurants = () => {
         .from("restaurants_users")
         .select("restaurant")
         .eq("user", user);
-
+        
       if (error) throw new Error("Error al cargar lista de restaurantes");
 
       if (!data) return [];

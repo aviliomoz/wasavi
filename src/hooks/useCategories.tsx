@@ -18,38 +18,31 @@ export const useCategories = (
   const { restaurant } = useLocalData();
 
   useEffect(() => {
+    setLoading(true);
     getCategories().then(setCategories);
   }, []);
 
   useEffect(() => {
-    if (categories) {
-      setLoading(false);
-    }
+    if (categories) setLoading(false);
   }, [categories]);
 
   const getCategories = async (): Promise<Category[]> => {
-    try {
-      let query = supabase
-        .from("categories")
-        .select("id, name")
-        .eq("restaurant", restaurant?.id)
-        .eq("type", type);
+    let query = supabase
+      .from("categories")
+      .select("id, name")
+      .eq("restaurant", restaurant?.id)
+      .eq("type", type);
 
-      if (id) {
-        query = query.eq("id", id);
-      }
-
-      const { data, error } = await query;
-
-      if (error) throw new Error("Error al cargar las categorías");
-
-      if (!data) return [];
-
-      return data;
-    } catch (error) {
-      console.error(error);
-      return [];
+    if (id) {
+      query = query.eq("id", id);
     }
+
+    const { data, error } = await query;
+
+    if (error) throw new Error("Error al cargar las categorías");
+    if (!data) return [];
+
+    return data;
   };
 
   return { categories, loading } as const;

@@ -4,71 +4,41 @@ import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
 
 // Types
-import { Category, Supply } from "../types/interfaces";
+import { Supply } from "../types/interfaces";
 
 export const useSupply = (id: string | undefined) => {
-  const [supply, setSupply] = useState<Supply | null>(null);
-  const [category, setCategory] = useState<Category | null>(null);
-
+  const [supply, setSupply] = useState<Supply>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setLoading(true);
-    setCategory(null);
     getSupply().then(setSupply);
   }, [id]);
 
   useEffect(() => {
     if (supply) {
-      getCategory(supply.category).then(setCategory);
+      setLoading(false);
     }
   }, [supply]);
 
-  useEffect(() => {
-    if (supply && category) {
-      setLoading(false);
-    }
-  }, [supply, category]);
-
-  const getSupply = async (): Promise<Supply | null> => {
+  const getSupply = async (): Promise<Supply | undefined> => {
     try {
       const { data, error } = await supabase
         .from("supplies")
-        .select(
-          `id, name, category, restaurant, um, waste, price, taxes_included`
-        )
+        .select(`*, categories ( name )`)
         .eq("id", id)
         .single();
 
       if (error) throw new Error("Error al cargar los detalles del insumo");
 
-      if (!data) return null;
+      if (!data) return undefined;
 
       return data;
     } catch (error) {
       console.error(error);
-      return null;
+      return undefined;
     }
   };
 
-  const getCategory = async (id: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("categories")
-        .select(`id, name`)
-        .eq("id", id)
-        .single();
-
-      if (error) throw new Error("Error al cargar la categoría");
-
-      if (!data) return null;
-
-      return data;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  return { supply: { ...supply, category }, loading } as const;
+  return { supply, loading } as const;
 };

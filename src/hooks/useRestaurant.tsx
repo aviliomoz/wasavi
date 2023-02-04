@@ -24,7 +24,7 @@ export const useRestaurant = (id: string | undefined) => {
     try {
       const { data, error } = await supabase
         .from("restaurants")
-        .select("id, name, currency")
+        .select("id, name, currency, buy_taxes, sell_taxes")
         .eq("id", id)
         .single();
 
