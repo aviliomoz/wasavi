@@ -9,7 +9,6 @@ import {
   MdOutlineShoppingBag,
   MdOutlineInventory,
   MdOutlineRiceBowl,
-  MdOutlinePayments
 } from "react-icons/md";
 
 interface MenuOption {
@@ -33,11 +32,6 @@ const menu: MenuOption[] = [
     name: "Compras",
     icon: MdOutlineShoppingBag,
     path: "/purchases",
-  },
-  {
-    name: "Pagos",
-    icon: MdOutlinePayments,
-    path: "/payments",
   },
   {
     name: "Almacén",

@@ -12,7 +12,7 @@ import { SignupForm } from "./components/auth/SignupForm";
 import { RestaurantsList } from "./components/restaurant/RestaurantsList";
 import { EmptyItem } from "./components/ui/EmptyItem";
 import { AppLayout } from "./components/ui/AppLayout";
-import { SupplyDetails } from "./components/supplies/SupplyDetails";
+import { SupplyEditor } from "./components/supplies/SupplyEditor";
 import { ProductDetails } from "./components/products/ProductDetails";
 import { SupplyCreator } from "./components/supplies/SupplyCreator";
 
@@ -21,7 +21,6 @@ import { LandingPage } from "./pages/LandingPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { SuppliesPage } from "./pages/SuppliesPage";
 import { ProductsPage } from "./pages/ProductsPage";
-import { PaymentsPage } from "./pages/PaymentsPage";
 import { PurchasesPage } from "./pages/PurchasesPage";
 import { StockPage } from "./pages/StockPage";
 
@@ -46,7 +45,7 @@ export const App = () => {
             <Route element={<AppLayout />}>
               <Route path="/supplies" element={<SuppliesPage />} />
               <Route path="/supplies/new" element={<SupplyCreator />} />
-              <Route path="/supplies/:id" element={<SupplyDetails />} />
+              <Route path="/supplies/:id" element={<SupplyEditor />} />
               <Route path="/products/*" element={<ProductsPage />}>
                 <Route path="" element={<EmptyItem />} />
                 <Route path=":id" element={<ProductDetails />} />
@@ -54,7 +53,6 @@ export const App = () => {
                 <Route path="edit/:id" element={<p>Edit product</p>} />
               </Route>
               <Route path="/purchases" element={<PurchasesPage />} />
-              <Route path="/payments" element={<PaymentsPage />} />
               <Route path="/stock" element={<StockPage />} />
             </Route>
           </Route>
