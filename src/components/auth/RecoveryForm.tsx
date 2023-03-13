@@ -1,24 +1,25 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { recovery } from "../../utils/auth";
 
 export const RecoveryForm = () => {
-  const [email, setEmail] = useState("");
-
-  const { recovery, loading } = useAuth();
+  const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
     await recovery(email);
+    setLoading(false);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-80 h-max flex flex-col items-center justify-center"
+      className="w-full h-max flex flex-col items-center justify-center"
     >
-      <h2 className="mb-8 font-bold text-2xl">Recuperar contraseña</h2>
+      <h2 className="mb-4 font-bold text-xl">Recuperar contraseña</h2>
       <p className="text-center font-light text-sm px-6 text-gray-500 mb-5">
         Se enviará un correo con un enlace de recuperación
       </p>
@@ -28,12 +29,12 @@ export const RecoveryForm = () => {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="rounded-sm border border-gray-300 py-2 px-4 bg-white outline-none w-full"
+        className="rounded-md border py-2 px-4 bg-white outline-none w-full"
       />
 
       <button
         type="submit"
-        className="my-6 bg-emerald-500 py-2 text-white font-bold rounded-sm w-full"
+        className="my-6 bg-emerald-500 py-2 text-white font-bold rounded-md w-full"
       >
         {loading ? "Validando datos..." : "Enviar correo"}
       </button>

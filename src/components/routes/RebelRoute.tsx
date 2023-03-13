@@ -1,10 +1,9 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { Outlet, Navigate, useLoaderData } from "react-router-dom";
 
 export const RebelRoute = () => {
-  const { session, loading } = useAuth();
+  const session = useLoaderData();
 
-  if (!loading && session) return <Navigate to={"/home"} />;
+  if (session) return <Navigate to={"/home"} />;
 
-  return !loading ? <>{<Outlet />}</> : <></>;
+  return <Outlet />;
 };

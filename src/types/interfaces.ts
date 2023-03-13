@@ -1,68 +1,42 @@
-export interface Alert {
-  type: "ERROR" | "SUCCESS" | undefined;
-  message: string | undefined;
-}
-
 export interface Validation {
   ok: boolean;
   message: string | undefined;
 }
 
-export type UM = "KG" | "LT" | "UND" | undefined;
-
-export interface Product {
-  id: string;
-  name: string;
-  category: string;
-  restaurant: string;
-  um: UM;
-  amount: number;
-  price: number;
-  is_for_sale: boolean;
-}
-
-export interface Supply {
-  id: string;
-  name: string;
-  category: string;
-  categories: {
-    name: string;
-  };
-  restaurant: string;
-  um: UM;
-  waste: number;
-  price: number;
-  taxes_included: boolean;
-  created_at: string;
-  status: boolean;
-}
-
 export interface User {
   id: string;
   name: string;
+  auth_id: string;
+  created_at: Date;
 }
 
-export type Currency = "USD" | "EUR" | "PEN" | undefined;
+export interface LocalData {
+  user: User | undefined;
+  restaurant: Restaurant | undefined;
+}
+
+export type Currency = "PEN" | "EUR" | "USD";
 
 export interface Restaurant {
   id: string;
   name: string;
   currency: Currency;
-  buy_taxes: number;
-  sell_taxes: number;
+  created_at: Date;
 }
 
-export interface LocalData {
-  user: string | undefined;
-  restaurant: Restaurant | undefined;
-}
+export type UM = "KG" | "LT" | "UND";
 
-export interface Category {
+export interface Product {
   id: string;
   name: string;
-}
-
-export interface Item {
-  id: string;
-  name: string;
+  category: string;
+  product_categories: {
+    id: string;
+    name: string;
+  };
+  restaurant: string;
+  um: UM;
+  amount: number;
+  price: number;
+  created_at: Date;
 }

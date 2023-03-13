@@ -49,13 +49,3 @@ export const validateRecovery = (email: string): Validation => {
 
   return { ok: true, message: undefined };
 };
-
-export const validateReset = (password: string): Validation => {
-  if (password === "")
-    return {
-      ok: false,
-      message: "El campo de la contraseña no puede estar vacío",
-    };
-
-  return { ok: true, message: undefined };
-};
