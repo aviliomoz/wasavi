@@ -10,7 +10,7 @@ import { Dropdown } from "./Dropdown";
 import { logout } from "../utils/auth";
 
 export const Header = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const [{ user, restaurant }, setData] = useState<LocalData>({
     user: undefined,
     restaurant: undefined,
@@ -18,7 +18,7 @@ export const Header = () => {
 
   useEffect(() => {
     setData(getLocalData());
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <header className="h-20 flex items-center justify-between gap-6">

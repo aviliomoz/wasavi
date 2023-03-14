@@ -1,26 +1,22 @@
 import { useEffect, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import type { Target } from "../types/interfaces";
+import { getElementsCount } from "../utils/elements";
 
 interface Props {
   currentPage: number;
   elementsPerPage: number;
-  target: "products" | "supplies";
-  loader: () => Promise<number>;
+  target: Target;
 }
 
-export const Pagination = ({
-  currentPage,
-  elementsPerPage,
-  target,
-  loader,
-}: Props) => {
+export const Pagination = ({ currentPage, elementsPerPage, target }: Props) => {
   const [elements, setElements] = useState<number>(0);
   const [pages, setPages] = useState<number>(0);
   const [numbers, setNumbers] = useState<number[]>([]);
 
   useEffect(() => {
-    loader().then(setElements);
+    getElementsCount(target).then(setElements);
   }, []);
 
   useEffect(() => {

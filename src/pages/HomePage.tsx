@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loading } from "../components/Loading";
 import { RestaurantCard } from "../components/RestaurantCard";
 import { Restaurant } from "../types/interfaces";
 import { getLocalData, updateRestaurant } from "../utils/localStorage";
@@ -13,7 +14,12 @@ export const HomePage = () => {
     user && getRestaurantsByUser(user.id).then(setRestaurants);
   }, [user]);
 
-  if (restaurants === null) return <p>Cargando...</p>;
+  if (restaurants === null)
+    return (
+      <div className="w-full flex justify-center mt-20">
+        <Loading />
+      </div>
+    );
 
   return (
     <section className="px-4">

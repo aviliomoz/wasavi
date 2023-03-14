@@ -18,10 +18,9 @@ import { RecoveryForm } from "./components/auth/RecoveryForm";
 import { LandingPage } from "./pages/LandingPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { HomePage } from "./pages/HomePage";
-import { ProductsPage } from "./pages/ProductsPage";
-import { ProductsEditor } from "./pages/ProductsEditor";
-import { SuppliesPage } from "./pages/SuppliesPage";
 import { SuppliesEditor } from "./pages/SuppliesEditor";
+import { ProductsEditor } from "./pages/ProductsEditor";
+import { ElementsPage } from "./pages/ElementsPage";
 
 // Utils
 import { getSession } from "./utils/auth";
@@ -43,9 +42,15 @@ const router = createBrowserRouter(
       </Route>
       <Route element={<PrivateRoute />} loader={getSession}>
         <Route path="home" element={<HomePage />} />
-        <Route path="products/:pagination" element={<ProductsPage />} />
+        <Route
+          path="products/:pagination"
+          element={<ElementsPage target="products" />}
+        />
         <Route path="products/editor/:id" element={<ProductsEditor />} />
-        <Route path="supplies/:pagination" element={<SuppliesPage />} />
+        <Route
+          path="supplies/:pagination"
+          element={<ElementsPage target="supplies" />}
+        />
         <Route path="supplies/editor/:id" element={<SuppliesEditor />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />

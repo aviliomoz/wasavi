@@ -24,19 +24,25 @@ export interface Restaurant {
   created_at: Date;
 }
 
-export type UM = "KG" | "LT" | "UND";
-
 export interface Product {
   id: string;
   name: string;
-  category: string;
-  product_categories: {
-    id: string;
-    name: string;
-  };
   restaurant: string;
-  um: UM;
+  um: string;
   amount: number;
   price: number;
   created_at: Date;
 }
+
+export interface Supply {
+  id: string;
+  name: string;
+  restaurant: string;
+  um: string;
+  price: number;
+  waste: number;
+  taxes_included: boolean;
+  created_at: Date;
+}
+
+export type Target = "products" | "supplies";
