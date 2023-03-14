@@ -26,6 +26,7 @@ export const getElementsByPagination = async (
     .from(target)
     .select(`*`)
     .eq("restaurant", restaurant?.id)
+    .order("name")
     .range(
       pagination * productsPerPage - productsPerPage,
       pagination * productsPerPage - 1
@@ -34,34 +35,4 @@ export const getElementsByPagination = async (
   if (error) throw Error("Error al cargar los elementos");
 
   return data;
-};
-
-export const getSupplyById = async (id: string): Promise<Supply> => {
-  const { restaurant } = getLocalData();
-
-  const { data, error } = await supabase
-    .from("supplies")
-    .select(`*`)
-    .eq("restaurant", restaurant?.id)
-    .eq("id", id)
-    .single();
-
-  if (error) throw Error("Error al cargar elemento");
-
-  return data;
-};
-
-export const createSupply = async (supply: {
-  name: string;
-  restaurant: string;
-  price: number;
-  um: string;
-  waste: number;
-  taxes_included: boolean;
-}) => {
-  const { error } = await supabase.from("supplies").insert(supply);
-
-  if (error) throw Error("Error al crear insumo");
-
-  alert("Se ha creado el insumo correctamente");
 };

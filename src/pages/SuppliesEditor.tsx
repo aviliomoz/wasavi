@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { createSupply, getSupplyById } from "../utils/elements";
+import { createSupply, getSupplyById, updateSupply } from "../utils/supplies";
 import { getLocalData } from "../utils/localStorage";
 
 export const SuppliesEditor = () => {
@@ -31,7 +31,11 @@ export const SuppliesEditor = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (id === "new" && restaurant)
+    if (!restaurant || !id) {
+      return setLoading(false);
+    }
+
+    if (id === "new")
       return createSupply({
         name,
         price,
@@ -42,6 +46,17 @@ export const SuppliesEditor = () => {
       }).then(() => {
         document.location.assign("/supplies/1");
       });
+
+    updateSupply(id, {
+      name,
+      price,
+      um,
+      waste,
+      taxes_included,
+      restaurant: restaurant.id,
+    }).then(() => {
+      document.location.assign("/supplies/1");
+    });
 
     setLoading(false);
   };

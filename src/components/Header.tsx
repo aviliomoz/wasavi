@@ -33,16 +33,12 @@ export const Header = () => {
           <Dropdown
             icon={FaStore}
             text={restaurant.name}
-            routes={[
-              { name: "Ajustes de restaurante", url: "/settings/restaurant" },
-            ]}
           />
         )}
         {user && (
           <Dropdown
             icon={BiUserCircle}
             text={user.name}
-            routes={[{ name: "Ajustes de usuario", url: "/settings/user" }]}
             actions={[{ name: "Cerrar sesión", method: logout }]}
           />
         )}

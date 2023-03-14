@@ -23,38 +23,49 @@ interface Props {
 export const Dropdown = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleOpen = () => {
+    if (props.routes || props.actions) {
+      setIsOpen(!isOpen);
+    }
+  };
+
   return (
     <div
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={handleOpen}
       className="flex items-center justify-center gap-1 relative cursor-pointer"
     >
       <props.icon className="text-emerald-500" />
       <span className="max-w-[40px] truncate">{props.text}</span>
-      {isOpen ? <BiChevronUp /> : <BiChevronDown />}
+
+      {(props.routes || props.actions) && !isOpen && <BiChevronDown />}
+      {isOpen && <BiChevronUp />}
+
       {isOpen && (
         <div className="absolute top-full right-0 mt-2 border p-2 rounded-md bg-white w-max flex flex-col">
-          {props.routes?.map((route) => {
-            return (
-              <Link
-                className="py-1 px-3 rounded-md hover:bg-gray-50 w-full text-right"
-                key={route.name}
-                to={route.url}
-              >
-                {route.name}
-              </Link>
-            );
-          })}
-          {props.actions?.map((action) => {
-            return (
-              <button
-                className="py-1 px-3 rounded-md hover:bg-gray-50 w-full text-right"
-                key={action.name}
-                onClick={() => action.method()}
-              >
-                {action.name}
-              </button>
-            );
-          })}
+          {props.routes &&
+            props.routes?.map((route) => {
+              return (
+                <Link
+                  className="py-1 px-3 rounded-md hover:bg-gray-50 w-full text-right"
+                  key={route.name}
+                  to={route.url}
+                >
+                  {route.name}
+                </Link>
+              );
+            })}
+          {props.actions &&
+            props.actions?.map((action) => {
+              return (
+                <button
+                  className="py-1 px-3 rounded-md hover:bg-gray-50 w-full text-right"
+                  key={action.name}
+                  onClick={() => action.method()}
+                >
+                  {action.name}
+                </button>
+              );
+            })}
         </div>
       )}
     </div>

@@ -17,7 +17,7 @@ export const RootLayout = () => {
       <main>
         <Outlet />
       </main>
-      <footer className="absolute bottom-0 left-0 border-t w-full flex items-center justify-center h-10">
+      <footer className="absolute bottom-0 left-0 border-t w-full flex items-center justify-center h-10 text-sm">
         Wasavi - Versión: 1.0.0 - 2023
       </footer>
     </div>

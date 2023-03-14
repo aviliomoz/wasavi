@@ -44,7 +44,7 @@ export const Pagination = ({ currentPage, elementsPerPage, target }: Props) => {
   if (elements <= elementsPerPage) return <></>;
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center my-6">
       <div className="flex items-center gap-1">
         {currentPage !== 1 && (
           <Link to={`/${target}/${currentPage - 1}`}>
@@ -54,6 +54,7 @@ export const Pagination = ({ currentPage, elementsPerPage, target }: Props) => {
         {currentPage >= 3 && <span>...</span>}
         {numbers.map((number) => (
           <button
+            key={number}
             className={`w-8 h-8 rounded-md overflow-hidden  ${
               !checkVisibility(number) && "hidden"
             }`}

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface Route {
   name: string;
@@ -11,21 +11,23 @@ const routes: Route[] = [
 ];
 
 export const RouteSwitcher = () => {
+  const { pathname } = useLocation();
+
   return (
-    <div className="bg-gray-100 p-2 rounded-md flex ">
+    <div className="bg-gray-100 p-2 rounded-md flex gap-2">
       {routes.map((route, index) => {
         return (
-          <NavLink
+          <Link
             key={index}
-            className={({ isActive }) => {
-              return isActive
-                ? "bg-white p-2 w-1/2 rounded-md text-center font-medium"
-                : "p-2 w-1/2 text-center";
-            }}
+            className={`p-2 w-1/2 rounded-md text-center ${
+              pathname.includes(route.url.slice(0, -1))
+                ? "bg-white font-medium"
+                : "hover:bg-gray-50"
+            }`}
             to={route.url}
           >
             {route.name}
-          </NavLink>
+          </Link>
         );
       })}
     </div>
