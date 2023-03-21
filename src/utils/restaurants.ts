@@ -1,4 +1,4 @@
-import { supabase } from "../services/supabase";
+import { supabase } from "../supabase/browser-client";
 import type { Restaurant } from "../types/interfaces";
 
 export const getRestaurantsByUser = async (

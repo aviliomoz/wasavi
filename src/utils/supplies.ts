@@ -1,4 +1,4 @@
-import { supabase } from "../services/supabase";
+import { supabase } from "../supabase/browser-client";
 import { Supply } from "../types/interfaces";
 import { getLocalData } from "./localStorage";
 

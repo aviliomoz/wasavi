@@ -1,40 +1,46 @@
+// import Link from "next/link";
+
+// // Types
+// import type { LocalData } from "../types/interfaces";
+
+// Utils
+// import { getLocalData } from "../utils/localStorage";
+// import { logout } from "../utils/auth";
+import supabaseClient from "../supabase/server-client";
+
+// // Icons
+// import { BiUserCircle } from "react-icons/bi";
+// import { FaStore } from "react-icons/fa";
+
+// Components
 import { Logo } from "./Logo";
-import { Link, useLocation } from "react-router-dom";
-import { getLocalData } from "../utils/localStorage";
-import { useEffect, useState } from "react";
-import { LocalData } from "../types/interfaces";
+// import { Dropdown } from "./Dropdown";
 
-import { BiUserCircle } from "react-icons/bi";
-import { FaStore } from "react-icons/fa";
-import { Dropdown } from "./Dropdown";
-import { logout } from "../utils/auth";
+export async function Header() {
+  const supabase = supabaseClient();
 
-export const Header = () => {
-  const { pathname } = useLocation();
-  const [{ user, restaurant }, setData] = useState<LocalData>({
-    user: undefined,
-    restaurant: undefined,
-  });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    setData(getLocalData());
-  }, [pathname]);
+  if (!session) {
+    return (
+      <header className="flex justify-center">
+        <Logo />
+      </header>
+    );
+  }
 
   return (
     <header className="h-20 flex items-center justify-between gap-6">
       <Logo />
-      <div className="max-w-max flex items-center justify-end gap-2">
+      {/* <div className="max-w-max flex items-center justify-end gap-2">
         {!user && !restaurant && (
-          <Link to="/login" className="border rounded-md px-3 py-1">
+          <Link href="/" className="border rounded-md px-3 py-1">
             Iniciar sesión
           </Link>
         )}
-        {restaurant && (
-          <Dropdown
-            icon={FaStore}
-            text={restaurant.name}
-          />
-        )}
+        {restaurant && <Dropdown icon={FaStore} text={restaurant.name} />}
         {user && (
           <Dropdown
             icon={BiUserCircle}
@@ -42,7 +48,7 @@ export const Header = () => {
             actions={[{ name: "Cerrar sesión", method: logout }]}
           />
         )}
-      </div>
+      </div> */}
     </header>
   );
-};
+}

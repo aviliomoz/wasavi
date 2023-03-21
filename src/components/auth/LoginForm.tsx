@@ -1,5 +1,7 @@
+"use client"
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { login } from "../../utils/auth";
 
 export const LoginForm = () => {
@@ -38,7 +40,7 @@ export const LoginForm = () => {
         className="rounded-md border py-2 px-4 mb-2 bg-white outline-none w-full"
       />
       <Link
-        to={"/recovery"}
+        href={"/recovery"}
         className="text-sm text-gray-400 hover:font-medium mt-4 cursor-pointer"
       >
         Recuperar contraseña
@@ -50,7 +52,7 @@ export const LoginForm = () => {
         {loading ? "Validando datos..." : "Entrar"}
       </button>
       <Link
-        to={"/signup"}
+        href={"/signup"}
         className="text-sm text-gray-500 hover:font-medium mt-2 cursor-pointer"
       >
         <span>¿No tienes cuenta? - </span>

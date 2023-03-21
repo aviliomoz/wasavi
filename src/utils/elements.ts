@@ -1,5 +1,5 @@
 import { getLocalData } from "./localStorage";
-import { supabase } from "../services/supabase";
+import { supabase } from "../supabase/browser-client";
 import { Product, Supply, Target } from "../types/interfaces";
 
 export const getElementsCount = async (target: Target): Promise<number> => {

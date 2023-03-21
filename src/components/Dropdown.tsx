@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import { IconType } from "react-icons";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface Route {
   url: string;
@@ -48,7 +50,7 @@ export const Dropdown = (props: Props) => {
                 <Link
                   className="py-1 px-3 rounded-md hover:bg-gray-50 w-full text-right"
                   key={route.name}
-                  to={route.url}
+                  href={route.url}
                 >
                   {route.name}
                 </Link>

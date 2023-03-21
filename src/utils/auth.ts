@@ -1,4 +1,4 @@
-import { supabase } from "../services/supabase";
+import { supabase } from "../supabase/browser-client";
 import { validateLogin, validateRecovery, validateSignup } from "./validators";
 import { cleanLocalData, updateUser } from "./localStorage";
 
