@@ -2,31 +2,33 @@ import { supabase } from "../supabase/browser-client";
 import type { Restaurant } from "../types/interfaces";
 
 export const getRestaurantsByUser = async (
-  user_id: string
+  auth_id: string
 ): Promise<Restaurant[]> => {
   const { data, error } = await supabase
     .from("restaurants_users")
-    .select("restaurants(*)")
-    .eq("user", user_id);
+    .select("restaurants(id,name,currency,created_at)")
+    .eq("user", auth_id);
 
-  if (error)
-    throw Error("Ha ocurrido un error al cargar los restaurantes");
+  if (error) throw Error("Ha ocurrido un error al cargar los restaurantes");
 
-  const restaurants = data.map(
-    (element: { restaurants: Restaurant }) => element.restaurants
+  const restaurants: Restaurant[] = data.map(
+    (element: any) => element.restaurants
   );
 
   return restaurants;
 };
 
-export const getRestaurantById = async (id: string): Promise<Restaurant> => {
+export const getRestaurantName = async (
+  id: string
+): Promise<string | undefined> => {
   const { data, error } = await supabase
     .from("restaurants")
-    .select("*")
+    .select("name")
     .eq("id", id)
     .single();
 
   if (error) throw Error("Error al cargar el restaurante");
+  if (!data) return undefined;
 
-  return data;
+  return data.name;
 };

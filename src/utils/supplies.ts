@@ -1,55 +1,81 @@
 import { supabase } from "../supabase/browser-client";
 import { Supply } from "../types/interfaces";
-import { getLocalData } from "./localStorage";
 
-export const getSupplyById = async (id: string): Promise<Supply> => {
-  const { restaurant } = getLocalData();
-
+export const getSupplies = async (restaurant: string): Promise<Supply[]> => {
   const { data, error } = await supabase
     .from("supplies")
-    .select(`*`)
-    .eq("restaurant", restaurant?.id)
+    .select(
+      "id,created_at,name,um,price,waste,restaurant,taxes_included,status"
+    )
+    .eq("restaurant", restaurant)
+    .order("name");
+
+  if (!data || error) return [];
+
+  return data;
+};
+
+export const getSupplyById = async (id: string): Promise<Supply | null> => {
+  const { data, error } = await supabase
+    .from("supplies")
+    .select(
+      "id,created_at,name,um,price,waste,restaurant,taxes_included,status"
+    )
     .eq("id", id)
     .single();
 
-  if (error) throw Error("Error al cargar elemento");
+  if (!data || error) return null;
 
   return data;
 };
 
 interface SupplyInfo {
   name: string;
-  restaurant: string;
   price: number;
   um: string;
   waste: number;
+  restaurant: string;
   taxes_included: boolean;
 }
 
 export const createSupply = async (supply: SupplyInfo) => {
-  const { error } = await supabase.from("supplies").insert(supply);
+  try {
+    const { error } = await supabase.from("supplies").insert(supply);
 
-  if (error) throw Error("Error al crear insumo");
+    if (error) throw Error("Error al crear el insumo");
 
-  alert("Se ha creado el insumo correctamente");
+    alert("Insumo creado correctamente");
+  } catch (error) {
+    alert(error);
+  }
 };
 
-export const updateSupply = async (id: string, supply: SupplyInfo) => {
-  const { error } = await supabase.from("supplies").update(supply).eq("id", id);
+export const updateSupply = async (supply: SupplyInfo, id: string) => {
+  try {
+    const { error } = await supabase
+      .from("supplies")
+      .update(supply)
+      .eq("id", id);
 
-  if (error) throw Error("Error al actualizar insumo");
+    if (error) throw Error("Error al editar el insumo");
 
-  alert("Se ha actualizado el insumo correctamente");
+    alert("Insumo actualizado correctamente");
+  } catch (error) {
+    alert(error);
+  }
 };
 
-export const deleteSupply = async (id: string) => {
-  const { error } = await supabase.from("supplies").delete().eq("id", id);
-  const { error: recipeError } = await supabase
-    .from("products_supplies")
-    .delete()
-    .eq("supply", id);
+export const togleSupply = async (id: string, newStatus: boolean) => {
+  try {
+    const { error } = await supabase
+      .from("supplies")
+      .update({ status: newStatus })
+      .eq("id", id);
 
-  if (error || recipeError) throw Error("Error al eliminar insumo");
+    if (error) throw Error("Error al cambiar el estado del insumo");
 
-  alert("Se ha eliminado el insumo correctamente");
+    alert("Se ha cambiado el estado del insumo correctamente");
+  } catch (error) {
+    alert(error);
+  }
 };

@@ -3,46 +3,48 @@ export interface Validation {
   message: string | undefined;
 }
 
-export interface User {
+export type Target = "products" | "sub-recipes" | "supplies";
+
+export interface Element {
   id: string;
   name: string;
-  auth_id: string;
-  created_at: Date;
+  status: boolean;
 }
-
-export interface LocalData {
-  user: User | undefined;
-  restaurant: Restaurant | undefined;
-}
-
-export type Currency = "PEN" | "EUR" | "USD";
 
 export interface Restaurant {
   id: string;
-  name: string;
-  currency: Currency;
   created_at: Date;
-}
-
-export interface Product {
-  id: string;
   name: string;
-  restaurant: string;
-  um: string;
-  amount: number;
-  price: number;
-  created_at: Date;
+  currency: string;
+  status: boolean;
 }
 
 export interface Supply {
   id: string;
-  name: string;
-  restaurant: string;
-  um: string;
-  price: number;
-  waste: number;
-  taxes_included: boolean;
   created_at: Date;
+  name: string;
+  price: number;
+  um: string;
+  waste: number;
+  restaurant: string;
+  taxes_included: boolean;
+  status: boolean;
 }
 
-export type Target = "products" | "supplies";
+export interface Product {
+  id: string;
+  created_at: Date;
+  name: string;
+  restaurant: string;
+  status: boolean;
+}
+
+export interface Subrecipe {
+  id: string;
+  created_at: Date;
+  name: string;
+  restaurant: string;
+  um: string,
+  amount: number,
+  status: boolean;
+}

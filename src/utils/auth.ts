@@ -1,16 +1,14 @@
 import { supabase } from "../supabase/browser-client";
 import { validateLogin, validateRecovery, validateSignup } from "./validators";
-import { cleanLocalData, updateUser } from "./localStorage";
 
-export const getSession = async () => {
-  const {
-    data: { session },
-    error,
-  } = await supabase.auth.getSession();
-
-  if (error) throw Error("Error al cargar la sesión del usuario");
-
-  return session;
+export const getUsername = async (id: string): Promise<string> => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("name")
+    .eq("auth_id", id)
+    .single();
+  if (error) throw Error("Error al cargar datos de usuario");
+  return data.name;
 };
 
 export const logout = async () => {
@@ -19,7 +17,6 @@ export const logout = async () => {
 
     if (error) throw Error("Error al cerrar la sesión");
 
-    cleanLocalData();
     return document.location.assign("/login");
   } catch (error) {
     alert(error);
@@ -42,14 +39,7 @@ export const login = async (email: string, password: string) => {
     if (!user) throw new Error("Los datos ingresados son inválidos");
     if (error) throw new Error("Error al iniciar sesión");
 
-    const { data } = await supabase
-      .from("users")
-      .select("*")
-      .eq("auth_id", user.id)
-      .single();
-
-    updateUser(data);
-    return document.location.assign("/home");
+    return document.location.assign(`/${user.id}`);
   } catch (error) {
     alert(error);
   }
@@ -77,14 +67,7 @@ export const signup = async (name: string, email: string, password: string) => {
 
     if (insertError) throw Error("Error al registrar los datos del usuario");
 
-    const { data } = await supabase
-      .from("users")
-      .select("*")
-      .eq("auth_id", user.id)
-      .single();
-
-    updateUser(data);
-    return document.location.assign("/home");
+    return document.location.assign(`/${user.id}`);
   } catch (error) {
     alert(error);
   }

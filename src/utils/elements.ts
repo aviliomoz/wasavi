@@ -1,38 +1,23 @@
-import { getLocalData } from "./localStorage";
 import { supabase } from "../supabase/browser-client";
-import { Product, Supply, Target } from "../types/interfaces";
+import { Element, Target } from "../types/interfaces";
 
-export const getElementsCount = async (target: Target): Promise<number> => {
-  const { restaurant } = getLocalData();
-
-  const { error, data } = await supabase
-    .from(target)
-    .select("id")
-    .eq("restaurant", restaurant?.id);
-
-  if (error) throw Error("Error al cargar los elementos");
-
-  return data.length;
-};
-
-export const getElementsByPagination = async (
+export const getElementsList = async (
   target: Target,
-  pagination: number,
-  productsPerPage: number
-): Promise<Product[] | Supply[]> => {
-  const { restaurant } = getLocalData();
+  restaurant: string
+): Promise<Element[]> => {
+  try {
+    const { data, error } = await supabase
+      .from(target)
+      .select("id, name, status")
+      .eq("restaurant", restaurant)
+      .order("name");
 
-  const { data, error } = await supabase
-    .from(target)
-    .select(`*`)
-    .eq("restaurant", restaurant?.id)
-    .order("name")
-    .range(
-      pagination * productsPerPage - productsPerPage,
-      pagination * productsPerPage - 1
-    );
+    if (!data) return [];
+    if (error) throw Error("Error al obtener la lista de " + target);
 
-  if (error) throw Error("Error al cargar los elementos");
-
-  return data;
+    return data;
+  } catch (error) {
+    alert(error);
+    return [];
+  }
 };

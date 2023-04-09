@@ -1,4 +1,5 @@
-import { Logo } from "@/src/components/Logo";
-export default function LoginPage() {
-  return <h1>Login page</h1>;
+import { redirect } from "next/navigation";
+
+export default function LandingPage() {
+  return redirect("/login");
 }
