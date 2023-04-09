@@ -1,19 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // // Icons
 import { BiUserCircle, BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { FaStore } from "react-icons/fa";
-import { logout } from "../utils/auth";
+import { getUsername, logout } from "../utils/auth";
+import { getRestaurantName } from "../utils/restaurants";
 
 interface Props {
   user: string;
-  restaurant?: string;
+  restaurant: string;
 }
 
-export const SessionDropdown = ({ user, restaurant = undefined }: Props) => {
+export const SessionDropdown = ({ user, restaurant }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [resname, setResname] = useState("");
+
+  useEffect(() => {
+    getUsername(user).then(setUsername)
+  }, [])
+
+  useEffect(() => {
+    getRestaurantName(restaurant).then(setResname)
+  }, [])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -28,14 +39,14 @@ export const SessionDropdown = ({ user, restaurant = undefined }: Props) => {
         <p className="flex items-center gap-1">
           <FaStore />
           <span className="border-r pr-3 mr-3 max-w-[100px] truncate">
-            Tayanti
+            {resname}
           </span>
         </p>
       )}
       <p className="flex items-center gap-1">
         <BiUserCircle />
         <span className="hidden sm:block max-w-[80px] sm:max-w-[160px] truncate">
-          {user}
+          {username}
         </span>
         {isOpen ? <BiChevronUp /> : <BiChevronDown />}
       </p>

@@ -20,7 +20,7 @@ export const getRestaurantsByUser = async (
 
 export const getRestaurantName = async (
   id: string
-): Promise<string | undefined> => {
+): Promise<string> => {
   const { data, error } = await supabase
     .from("restaurants")
     .select("name")
@@ -28,7 +28,6 @@ export const getRestaurantName = async (
     .single();
 
   if (error) throw Error("Error al cargar el restaurante");
-  if (!data) return undefined;
 
   return data.name;
 };

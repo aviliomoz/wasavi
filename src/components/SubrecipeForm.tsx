@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import {
   createSubrecipe,
   getSubrecipeById,
@@ -8,6 +8,7 @@ import {
   updateSubrecipe,
 } from "../utils/sub-recipes";
 import { useRouter } from "next/navigation";
+import { RecipeForm } from "./RecipeForm";
 
 interface Props {
   mode: "create" | "edit";
@@ -143,6 +144,9 @@ export const SubrecipeForm = ({
           }
         />
       </label>
+
+      <RecipeForm />
+
       <div className="flex items-center gap-2">
         {mode === "edit" && status && subrecipe_id && (
           <button

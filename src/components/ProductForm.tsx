@@ -8,6 +8,7 @@ import {
   updateProduct,
 } from "../utils/products";
 import { useRouter } from "next/navigation";
+import { RecipeForm } from "./RecipeForm";
 
 interface Props {
   mode: "create" | "edit";
@@ -94,6 +95,9 @@ export const ProductForm = ({ mode, user, restaurant, product_id }: Props) => {
           }
         />
       </label>
+
+      <RecipeForm />
+
       <div className="flex items-center gap-2">
         {mode === "edit" && status && product_id && (
           <button
