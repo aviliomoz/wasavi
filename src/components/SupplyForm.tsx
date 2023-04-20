@@ -1,199 +1,161 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  createSupply,
-  getSupplyById,
-  togleSupply,
-  updateSupply,
-} from "../utils/supplies";
-import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
+import { FormEvent, useState } from "react";
+
+// Types
+import { Supply } from "@/src/utils/types";
+
+// Consts
+import { ums } from "../utils/consts";
+
+// Stores
+import { useSuppliesStore } from "../stores/suppliesStore";
+import { useRestaurantStore } from "../stores/restaurantStore";
+import { useModeStore } from "../stores/modeStore";
+import { useCalc } from "../hooks/useCalc";
 
 interface Props {
-  mode: "create" | "edit";
-  user: string;
-  restaurant: string;
-  supply_id?: string;
+  supply?: Supply;
 }
 
-const ums = [
-  { name: "Kilogramos", uuid: "d3c03fe4-bf98-453d-b5fc-f1fedbefb2c4" },
-  { name: "Litros", uuid: "76b03634-a0fc-49f5-9038-d2dfe7f942bb" },
-  { name: "Unidades", uuid: "fd8a5d39-3b00-4b6a-aec3-a8227428760a" },
-];
+export const SupplyForm = ({ supply }: Props) => {
+  const { setShowMode } = useModeStore();
+  const { updateSupply, createSupply, deleteSupply } = useSuppliesStore();
+  const { currency, taxes } = useRestaurantStore();
+  const { calculateSupplyCost } = useCalc();
 
-export const SupplyForm = ({ mode, user, restaurant, supply_id }: Props) => {
-  const router = useRouter();
+  // Form elements
+  const [name, setName] = useState<string>(supply?.name || "");
+  const [um, setUm] = useState<string>(supply?.um || "Kg");
+  const [price, setPrice] = useState<number>(supply?.price || 0);
+  const [waste, setWaste] = useState<number>(supply?.waste || 0);
+  const [taxes_included, setTaxesIncluded] = useState<boolean>(
+    supply ? supply.taxes_included : true
+  );
 
-  const [name, setName] = useState<string>("");
-  const [um, setUm] = useState<string>("d3c03fe4-bf98-453d-b5fc-f1fedbefb2c4");
-  const [price, setPrice] = useState<string>("0");
-  const [waste, setWaste] = useState<string>("0");
-  const [taxes_included, setTaxesIncluded] = useState<boolean>(true);
-  const [status, setStatus] = useState<boolean>(true);
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [saving, setSaving] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (mode === "edit" && supply_id) {
-      getSupplyById(supply_id).then((supply) => {
-        if (supply) {
-          setName(supply.name);
-          setUm(supply.um);
-          setPrice(supply.price.toString());
-          setWaste(supply.waste.toString());
-          setTaxesIncluded(supply.taxes_included);
-          setStatus(supply.status);
-        }
-
-        setLoading(false);
-      });
-    }
-
-    if (mode === "create") setLoading(false);
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setSaving(true);
-
-    if (mode === "create") {
-      await createSupply({
+    if (supply) {
+      updateSupply(supply.id, {
+        id: supply.id,
         name,
-        price: Number(price),
         um,
-        waste: Number(waste),
+        price,
+        waste,
         taxes_included,
-        restaurant,
+        status: supply.status,
       });
     }
 
-    if (mode === "edit" && supply_id) {
-      await updateSupply(
-        {
-          name,
-          price: Number(price),
-          um,
-          waste: Number(waste),
-          taxes_included,
-          restaurant,
-        },
-        supply_id
-      );
+    if (!supply) {
+      createSupply({
+        id: uuidv4(),
+        name,
+        um,
+        price,
+        waste,
+        taxes_included,
+        status: true,
+      });
     }
 
-    setSaving(false);
-    router.push(`/${user}/${restaurant}/supplies`);
+    setShowMode("supplies", "default");
   };
-
-  const handleToggleState = async () => {
-    const action = status ? "anular" : "activar";
-
-    const confirmation = confirm(`¿Seguro que quieres ${action} este insumo?`);
-
-    if (confirmation && supply_id) {
-      await togleSupply(supply_id, !status);
-      router.push(`/${user}/${restaurant}/supplies`);
-    }
-  };
-
-  if (loading) return <p>Cargando...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col mt-6 gap-2">
-      <label className="flex items-center gap-2">
-        <strong>Nombre:</strong>
-        <input
-          className="border rounded-md px-3 py-1 w-full"
-          type="text"
-          value={name}
-          onChange={(e: React.FormEvent<HTMLInputElement>) =>
-            setName(e.currentTarget.value)
-          }
-        />
-      </label>
-      <label className="flex items-center gap-2">
-        <strong className="min-w-max">Unidad de medida:</strong>
-        <select
-          className="border bg-white py-1 px-3 rounded-md w-full"
-          defaultValue={um}
-          onChange={(e: React.FormEvent<HTMLSelectElement>) =>
-            setUm(e.currentTarget.value)
-          }
-        >
-          {ums.map((um) => {
-            return (
-              <option key={um.uuid} value={um.uuid}>
-                {um.name}
-              </option>
-            );
-          })}
-        </select>
-      </label>
-      <label className="flex items-center gap-2">
-        <strong className="min-w-max">Precio de compra:</strong>
-        <input
-          className="border rounded-md px-3 py-1 w-full"
-          type="number"
-          min={0}
-          value={price}
-          onChange={(e: React.FormEvent<HTMLInputElement>) =>
-            setPrice(e.currentTarget.value)
-          }
-        />
-      </label>
-      <label className="flex items-center gap-2">
-        <strong className="min-w-max">Porcentaje de merma:</strong>
-        <strong>%</strong>
-        <input
-          className="border rounded-md px-3 py-1 w-full"
-          type="number"
-          min={0}
-          value={waste}
-          onChange={(e: React.FormEvent<HTMLInputElement>) =>
-            setWaste(e.currentTarget.value)
-          }
-        />
-      </label>
-      <label className="flex items-center gap-2">
-        <strong className="min-w-max">Afecto a impuestos:</strong>
-        <input
-          className="ml-3"
-          type="checkbox"
-          checked={taxes_included}
-          onChange={(e: React.FormEvent<HTMLInputElement>) =>
-            setTaxesIncluded(e.currentTarget.checked)
-          }
-        />
-      </label>
-      <div className="flex items-center gap-2">
-        {mode === "edit" && status && supply_id && (
-          <button
-            type="button"
-            onClick={() => handleToggleState()}
-            className="text-red-500 font-medium rounded-md py-2 px-4 mt-6"
+    <>
+      {!supply && <h3 className="font-semibold mb-6">Crear insumo:</h3>}
+      {supply && <h3 className="font-semibold mb-6">Editar insumo:</h3>}
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <label className="flex gap-2 items-center">
+          <span>Nombre:</span>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border rounded-md px-2"
+          />
+        </label>
+        <label className="flex gap-2 items-center">
+          <span>Unidad de medida:</span>
+          <select
+            value={um}
+            onChange={(e) => setUm(e.target.value)}
+            className="border rounded-md px-1"
           >
-            Anular
-          </button>
-        )}
-        {mode === "edit" && !status && supply_id && (
+            {ums.map((um) => {
+              return (
+                <option key={um} value={um}>
+                  {um}
+                </option>
+              );
+            })}
+          </select>
+        </label>
+        <label className="flex gap-2 items-center">
+          <span>Precio de compra:</span>
+          <span>{currency}</span>
+          <input
+            type="number"
+            value={price}
+            min={0}
+            step={0.1}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            className="w-24 border rounded-md px-2"
+          />
+        </label>
+        <label className="flex gap-2 items-center">
+          <span>Merma:</span>
+          <span>%</span>
+          <input
+            type="number"
+            value={waste}
+            min={0}
+            max={99}
+            step={1}
+            onChange={(e) => setWaste(Number(e.target.value))}
+            className="w-16 border rounded-md px-2"
+          />
+        </label>
+        <label className="flex gap-2 items-center">
+          <span>Incluye impuestos:</span>
+          <input
+            type="checkbox"
+            checked={taxes_included}
+            onChange={(e) => setTaxesIncluded(e.target.checked)}
+            className="w-16 border rounded-md px-2"
+          />
+        </label>
+        <label className="flex gap-2 items-center">
+          <span>Costo final:</span>
+          <span>{currency}</span>
+          <input
+            type="number"
+            value={calculateSupplyCost(price, taxes_included, taxes, waste)}
+            disabled
+            className="w-20 border rounded-md px-2"
+          />
+        </label>
+        <div className="flex items-center gap-2 justify-center mt-6">
+          {supply && (
+            <button
+              onClick={() => deleteSupply(supply.id)}
+              className="border rounded-full px-3 w-32 py-1"
+            >
+              Eliminar
+            </button>
+          )}
           <button
-            type="button"
-            onClick={() => handleToggleState()}
-            className=" text-emerald-500 font-medium rounded-md py-2 px-4 mt-6"
+            type="submit"
+            className="bg-emerald-500 rounded-full px-3 text-white w-32 py-1"
           >
-            Activar
+            Guardar
           </button>
-        )}
-        <button
-          type="submit"
-          className="w-full bg-emerald-500 text-white font-medium rounded-md p-2 mt-6"
-        >
-          {saving ? "Guardando" : "Guardar insumo"}
-        </button>
-      </div>
-    </form>
+        </div>
+      </form>
+    </>
   );
 };
