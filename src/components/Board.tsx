@@ -69,7 +69,8 @@ export const Board = ({ target, title, elements, creator, editor }: Props) => {
             <span>Costo</span>
           </div>
           <ul className="flex flex-col gap-1">
-            {elements.length > 0 &&
+            {elements &&
+              elements.length > 0 &&
               elements
                 .filter((element) => element.status)
                 .filter((element) =>
