@@ -64,32 +64,33 @@ export const Board = ({ target, title, elements, creator, editor }: Props) => {
             placeholder={`Buscar ${title.toLowerCase()}`}
             className="border w-full py-1 px-4 rounded-full"
           />
-          <div className="text-sm font-medium flex items-center justify-between px-10 mt-4 mb-2">
+          <div className="text-sm font-medium flex items-center justify-between px-10 my-4">
             <span>Nombre</span>
             <span>Costo</span>
           </div>
           <ul className="flex flex-col gap-1">
-            {elements
-              .filter((element) => element.status)
-              .filter((element) =>
-                element.name.toLowerCase().includes(search.toLowerCase())
-              )
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((element) => {
-                return (
-                  <li key={element.id} className="">
-                    <button
-                      onClick={() => handleSelectElement(element)}
-                      className="w-full flex justify-between pr-8 py-0.5 pl-2 border border-transparent hover:border-gray-100 hover:font-medium rounded-lg hover:bg-gray-50"
-                    >
-                      <span>{element.name}</span>
-                      <span>
-                        {currency} {calculateCost(target, element.id)}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
+            {elements.length > 0 &&
+              elements
+                .filter((element) => element.status)
+                .filter((element) =>
+                  element.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((element) => {
+                  return (
+                    <li key={element.id} className="">
+                      <button
+                        onClick={() => handleSelectElement(element)}
+                        className="w-full flex justify-between pr-8 py-0.5 pl-2 border border-transparent hover:border-gray-100 hover:font-medium rounded-lg hover:bg-gray-50"
+                      >
+                        <span>{element.name}</span>
+                        <span>
+                          {currency} {calculateCost(target, element.id)}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
           </ul>
         </>
       )}

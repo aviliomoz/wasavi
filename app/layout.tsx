@@ -27,10 +27,10 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={inter.className}>
       <body
-        className="min-h-[100svh] py-8 px-24"
+        className="min-h-[100svh] py-10 px-24"
         style={{ backgroundColor: "#f5f5f5" }}
       >
-        <header className="flex items-center justify-between mb-8">
+        <header className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-10">
             <Logo />
             <Navigation />
