@@ -62,7 +62,7 @@ export const Board = ({ target, title, elements, creator, editor }: Props) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={`Buscar ${title.toLowerCase()}`}
-            className="border w-full py-1 px-4 rounded-full"
+            className="border w-full py-1 px-4 rounded-full outline-none"
           />
           <div className="text-sm font-medium flex items-center justify-between px-10 my-4">
             <span>Nombre</span>
@@ -86,7 +86,8 @@ export const Board = ({ target, title, elements, creator, editor }: Props) => {
                       >
                         <span>{element.name}</span>
                         <span>
-                          {currency} {calculateCost(target, element.id)}
+                          {currency}{" "}
+                          {calculateCost(target, element.id).toFixed(2)}
                         </span>
                       </button>
                     </li>

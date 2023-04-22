@@ -5,15 +5,21 @@ import { useEffect } from "react";
 // Components
 import { Board } from "@/src/components/Board";
 import { SupplyForm } from "@/src/components/SupplyForm";
-import { useStorage } from "@/src/hooks/useStorage";
 
 // Stores
 import { useActiveStore } from "@/src/stores/activeStore";
 import { useSuppliesStore } from "@/src/stores/suppliesStore";
 
+// Hoolk
+import { useStorage } from "@/src/hooks/useStorage";
+import { useSubproductsStore } from "@/src/stores/subproductsStore";
+import { SubproductForm } from "@/src/components/SubproductsForm";
+
 export default function HomePage() {
   const { supplies } = useSuppliesStore();
-  const { supplies: activeSupply } = useActiveStore();
+  const { subproducts } = useSubproductsStore();
+  const { supplies: activeSupply, subproducts: activeSubproduct } =
+    useActiveStore();
   const { loadData } = useStorage();
 
   useEffect(() => {
@@ -32,9 +38,9 @@ export default function HomePage() {
       <Board
         target="subproducts"
         title="Sub productos"
-        elements={[]}
-        creator={<></>}
-        editor={<></>}
+        elements={subproducts}
+        creator={<SubproductForm />}
+        editor={<SubproductForm subproduct={activeSubproduct} />}
       />
       <Board
         target="supplies"

@@ -2,8 +2,8 @@ export type Target = "products" | "subproducts" | "supplies";
 export type ShowMode = "default" | "create" | "edit";
 export type Element = Supply | Subproduct | Product;
 
-interface Ingredient {
-  type: "supply" | "subproduct";
+export interface Ingredient {
+  type: "supplies" | "subproducts";
   id: string;
   amount: number;
 }

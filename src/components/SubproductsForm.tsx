@@ -4,70 +4,71 @@ import { v4 as uuidv4 } from "uuid";
 import { FormEvent, useState } from "react";
 
 // Types
-import { Supply } from "@/src/utils/types";
+import { Ingredient, Subproduct } from "@/src/utils/types";
 
 // Consts
 import { ums } from "../utils/consts";
 
 // Stores
-import { useSuppliesStore } from "../stores/suppliesStore";
+import { useSubproductsStore } from "../stores/subproductsStore";
 import { useRestaurantStore } from "../stores/restaurantStore";
 import { useModeStore } from "../stores/modeStore";
 import { useCalc } from "../hooks/useCalc";
+import { RecipeForm } from "./RecipeForm";
 
 interface Props {
-  supply?: Supply;
+  subproduct?: Subproduct;
 }
 
-export const SupplyForm = ({ supply }: Props) => {
+export const SubproductForm = ({ subproduct }: Props) => {
   const { setShowMode } = useModeStore();
-  const { updateSupply, createSupply, deleteSupply } = useSuppliesStore();
+  const { updateSubproduct, createSubproduct, deleteSubproduct } =
+    useSubproductsStore();
   const { currency, taxes } = useRestaurantStore();
-  const { calculateSupplyCost } = useCalc();
+  const { calculateSubproductCost } = useCalc();
 
   // Form elements
-  const [name, setName] = useState<string>(supply?.name || "");
-  const [um, setUm] = useState<string>(supply?.um || "Kg");
-  const [price, setPrice] = useState<number>(supply?.price || 0);
-  const [waste, setWaste] = useState<number>(supply?.waste || 0);
-  const [taxes_included, setTaxesIncluded] = useState<boolean>(
-    supply ? supply.taxes_included : true
-  );
+  const [name, setName] = useState<string>(subproduct?.name || "");
+  const [um, setUm] = useState<string>(subproduct?.um || "Kg");
+  const [amount, setAmount] = useState<number>(subproduct?.amount || 0);
+  const [recipe, setRecipe] = useState<Ingredient[]>(subproduct?.recipe || []);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    if (supply) {
-      updateSupply(supply.id, {
-        id: supply.id,
+    if (subproduct) {
+      updateSubproduct(subproduct.id, {
+        id: subproduct.id,
         name,
         um,
-        price,
-        waste,
-        taxes_included,
-        status: supply.status,
+        amount,
+        recipe,
+        status: subproduct.status,
       });
     }
 
-    if (!supply) {
-      createSupply({
+    if (!subproduct) {
+      createSubproduct({
         id: uuidv4(),
         name,
         um,
-        price,
-        waste,
-        taxes_included,
+        amount,
+        recipe,
         status: true,
       });
     }
 
-    setShowMode("supplies", "default");
+    setShowMode("subproducts", "default");
   };
 
   return (
     <>
-      {!supply && <h3 className="font-semibold mb-6">Crear insumo:</h3>}
-      {supply && <h3 className="font-semibold mb-6">Editar insumo:</h3>}
+      {!subproduct && (
+        <h3 className="font-semibold mb-6">Crear sub producto:</h3>
+      )}
+      {subproduct && (
+        <h3 className="font-semibold mb-6">Editar sub producto:</h3>
+      )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <label className="flex gap-2 items-center">
@@ -96,37 +97,15 @@ export const SupplyForm = ({ supply }: Props) => {
           </select>
         </label>
         <label className="flex gap-2 items-center">
-          <span>Precio de compra:</span>
-          <span>{currency}</span>
+          <span>Cantidad preparada:</span>
+          <span>{um}</span>
           <input
             type="number"
-            value={price}
+            value={amount}
             min={0}
             step={0.1}
-            onChange={(e) => setPrice(Number(e.target.value))}
+            onChange={(e) => setAmount(Number(e.target.value))}
             className="w-24 border rounded-md px-2"
-          />
-        </label>
-        <label className="flex gap-2 items-center">
-          <span>Merma:</span>
-          <span>%</span>
-          <input
-            type="number"
-            value={waste}
-            min={0}
-            max={99}
-            step={1}
-            onChange={(e) => setWaste(Number(e.target.value))}
-            className="w-16 border rounded-md px-2"
-          />
-        </label>
-        <label className="flex gap-2 items-center">
-          <span>Incluye impuestos:</span>
-          <input
-            type="checkbox"
-            checked={taxes_included}
-            onChange={(e) => setTaxesIncluded(e.target.checked)}
-            className="w-16 border rounded-md px-2"
           />
         </label>
         <label className="flex gap-2 items-center">
@@ -134,20 +113,16 @@ export const SupplyForm = ({ supply }: Props) => {
           <span>{currency}</span>
           <input
             type="number"
-            value={calculateSupplyCost(
-              price,
-              taxes_included,
-              taxes,
-              waste
-            ).toFixed(2)}
+            value={calculateSubproductCost(recipe).toFixed(2)}
             disabled
             className="w-20 border rounded-md px-2"
           />
         </label>
+        <RecipeForm recipe={recipe} setRecipe={setRecipe} />
         <div className="flex items-center gap-2 justify-center mt-6">
-          {supply && (
+          {subproduct && (
             <button
-              onClick={() => deleteSupply(supply.id)}
+              onClick={() => deleteSubproduct(subproduct.id)}
               className="border rounded-full px-3 w-32 py-1"
             >
               Eliminar
