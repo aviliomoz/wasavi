@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Ingredient, Target } from "../utils/types";
+import { Ingredient } from "../utils/types";
 import { useSuppliesStore } from "../stores/suppliesStore";
 import { useSubproductsStore } from "../stores/subproductsStore";
 import { useRestaurantStore } from "../stores/restaurantStore";
@@ -89,6 +89,26 @@ export const RecipeForm = ({ recipe, setRecipe }: Props) => {
     return items.find((item) => item.id === id)?.um || "";
   };
 
+  const getSubproductAmount = (id: string): number => {
+    const item = items.find((item) => item.id === id);
+    if (item) {
+      if (item.type === "subproducts") {
+        const subproduct = subproducts.find(
+          (subproduct) => subproduct.id === item.id
+        );
+        if (subproduct) {
+          return subproduct.amount;
+        } else {
+          return 1;
+        }
+      } else {
+        return 1;
+      }
+    } else {
+      return 1;
+    }
+  };
+
   return (
     <div className="border rounded-md relative flex flex-col items-center mt-5 p-4">
       <h3 className="absolute -top-5 bg-white p-2 font-medium">Receta</h3>
@@ -98,7 +118,7 @@ export const RecipeForm = ({ recipe, setRecipe }: Props) => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar insumo o sub producto"
-          className="border mt-2 w-full rounded-full py-1 px-4 outline-none"
+          className="border mt-2 w-full rounded-full py-1 px-4 outline-none text-sm"
         />
         {search.length > 0 && (
           <ul className="p-2 absolute top-full mt-2 bg-white z-10 border rounded-md flex flex-col w-full">
@@ -151,9 +171,16 @@ export const RecipeForm = ({ recipe, setRecipe }: Props) => {
               />
               <p className="font-medium">
                 {currency}{" "}
-                {(calculateCost(ingredient.type, ingredient.id) * ingredient.amount).toFixed(2)}
+                {(
+                  (calculateCost(ingredient.type, ingredient.id) *
+                    ingredient.amount) /
+                  getSubproductAmount(ingredient.id)
+                ).toFixed(2)}
               </p>
-              <FaTrash className="text-xs mt-1 ml-2 fill-gray-400 hover:fill-emerald-500 cursor-pointer" onClick={() => deleteIngredient(ingredient.id)} />
+              <FaTrash
+                className="text-xs mt-1 ml-2 fill-gray-400 hover:fill-emerald-500 cursor-pointer"
+                onClick={() => deleteIngredient(ingredient.id)}
+              />
             </div>
           </i>
         ))}

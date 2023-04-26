@@ -30,7 +30,7 @@ export const SubproductForm = ({ subproduct }: Props) => {
   // Form elements
   const [name, setName] = useState<string>(subproduct?.name || "");
   const [um, setUm] = useState<string>(subproduct?.um || "Kg");
-  const [amount, setAmount] = useState<number>(subproduct?.amount || 0);
+  const [amount, setAmount] = useState<number>(subproduct?.amount || 1);
   const [recipe, setRecipe] = useState<Ingredient[]>(subproduct?.recipe || []);
 
   const handleSubmit = (event: FormEvent) => {
@@ -102,8 +102,8 @@ export const SubproductForm = ({ subproduct }: Props) => {
           <input
             type="number"
             value={amount}
-            min={0}
-            step={0.1}
+            min={0.01}
+            step={0.01}
             onChange={(e) => setAmount(Number(e.target.value))}
             className="w-24 border rounded-md px-2"
           />
@@ -115,7 +115,7 @@ export const SubproductForm = ({ subproduct }: Props) => {
             type="number"
             value={calculateSubproductCost(recipe).toFixed(2)}
             disabled
-            className="w-20 border rounded-md px-2"
+            className="w-24 border rounded-md px-2"
           />
         </label>
         <RecipeForm recipe={recipe} setRecipe={setRecipe} />

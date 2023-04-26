@@ -1,11 +1,19 @@
+import { useProductsStore } from "../stores/productsStore";
 import { useRestaurantStore } from "../stores/restaurantStore";
 import { useSubproductsStore } from "../stores/subproductsStore";
 import { useSuppliesStore } from "../stores/suppliesStore";
-import { Ingredient, Subproduct, Supply, Target } from "../utils/types";
+import {
+  Ingredient,
+  Product,
+  Subproduct,
+  Supply,
+  Target,
+} from "../utils/types";
 
 export const useCalc = () => {
   const { supplies } = useSuppliesStore();
   const { subproducts } = useSubproductsStore();
+  const { products } = useProductsStore();
   const { taxes } = useRestaurantStore();
 
   const calculateSupplyCost = (
@@ -21,10 +29,35 @@ export const useCalc = () => {
     }
   };
 
-  const calculateSubproductCost = (recipe: Ingredient[]) => {
-    return recipe.reduce((total, ingredient) => {
-      return total + calculateCost(ingredient.type, ingredient.id);
-    }, 0);
+  const calculateSubproductCost = (recipe: Ingredient[]): number => {
+    return recipe
+      .map((ingredient) => {
+        if (ingredient.type === "supplies") {
+          const supply = supplies.find((supply) => supply.id === ingredient.id);
+          if (supply && supply.status) {
+            return searchCalculateSupplyCost(ingredient.id) * ingredient.amount;
+          } else {
+            return 0;
+          }
+        } else if (ingredient.type === "subproducts") {
+          const subproduct: Subproduct | undefined = subproducts.find(
+            (subproduct) => subproduct.id === ingredient.id
+          );
+          if (subproduct && subproduct.status) {
+            return (
+              (calculateSubproductCost(subproduct.recipe) * ingredient.amount) /
+              subproduct.amount
+            );
+          } else {
+            return 0;
+          }
+        } else {
+          return 0;
+        }
+      })
+      .reduce((total, cost) => {
+        return total + cost;
+      }, 0);
   };
 
   const searchCalculateSupplyCost = (id: string) => {
@@ -42,32 +75,6 @@ export const useCalc = () => {
     );
   };
 
-  const findSupplies = (recipe: Ingredient[]): Supply[] => {
-    let list: Supply[] = [];
-
-    recipe.map((ingredient) => {
-      if (ingredient.type === "supplies") {
-        const supply: Supply | undefined = supplies.find(
-          (supply) => supply.id === ingredient.id
-        );
-        if (supply && supply.status) {
-          list.push(supply);
-        }
-      }
-
-      if (ingredient.type === "subproducts") {
-        const subproduct: Subproduct | undefined = subproducts.find(
-          (subproduct) => subproduct.id === ingredient.id
-        );
-        if (subproduct && subproduct.status) {
-          findSupplies(subproduct.recipe).map((supply) => list.push(supply));
-        }
-      }
-    });
-
-    return list;
-  };
-
   const searchCalculateSubproductCost = (id: string) => {
     const subproduct: Subproduct | undefined = subproducts.find(
       (subproduct) => subproduct.id === id
@@ -75,19 +82,17 @@ export const useCalc = () => {
 
     if (!subproduct || !subproduct.status) return 0;
 
-    let supplies: Supply[] = findSupplies(subproduct.recipe);
+    return calculateSubproductCost(subproduct.recipe);
+  };
 
-    return supplies.reduce((total, supply) => {
-      return (
-        total +
-        calculateSupplyCost(
-          supply.price,
-          supply.taxes_included,
-          taxes,
-          supply.waste
-        )
-      );
-    }, 0);
+  const searchCalculateProductCost = (id: string) => {
+    const product: Product | undefined = products.find(
+      (product) => product.id === id
+    );
+
+    if (!product || !product.status) return 0;
+
+    return calculateSubproductCost(product.recipe);
   };
 
   const calculateCost = (target: Target, id: string) => {
@@ -97,6 +102,9 @@ export const useCalc = () => {
 
       case "subproducts":
         return searchCalculateSubproductCost(id);
+
+      case "products":
+        return searchCalculateProductCost(id);
 
       default:
         return 0;

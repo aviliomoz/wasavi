@@ -23,6 +23,7 @@ export interface Product {
   name: string;
   recipe: Ingredient[];
   status: boolean;
+  sold: number;
 }
 
 export interface Subproduct {

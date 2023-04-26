@@ -35,7 +35,7 @@ export const Board = ({ target, title, elements, creator, editor }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-md p-6 min-h-[450px]">
+    <div className="bg-white rounded-md p-6 h-min border">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold">{title}</h2>
         {mode[target] !== "default" ? (
@@ -57,20 +57,27 @@ export const Board = ({ target, title, elements, creator, editor }: Props) => {
       </div>
       {mode[target] === "default" && (
         <>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={`Buscar ${title.toLowerCase()}`}
-            className="border w-full py-1 px-4 rounded-full outline-none"
-          />
-          <div className="text-sm font-medium flex items-center justify-between px-10 my-4">
-            <span>Nombre</span>
-            <span>Costo</span>
-          </div>
+          {elements &&
+          elements.filter((element) => element.status).length > 0 ? (
+            <>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={`Buscar ${title.toLowerCase()}`}
+                className="border w-full py-1 px-4 rounded-full outline-none"
+              />
+              <div className="text-sm font-semibold flex items-center justify-between px-10 my-4">
+                <span>Nombre</span>
+                <span>Costo</span>
+              </div>
+            </>
+          ) : (
+            <p className="my-8 text-center text-gray-400">Vacio</p>
+          )}
           <ul className="flex flex-col gap-1">
             {elements &&
-              elements.length > 0 &&
+              elements.filter((element) => element.status).length > 0 &&
               elements
                 .filter((element) => element.status)
                 .filter((element) =>

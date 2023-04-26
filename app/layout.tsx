@@ -43,9 +43,7 @@ export default function RootLayout({ children }: Props) {
             <DownloadButton />
           </div>
         </header>
-        <main className="min-h-[450px] bg-gray-200 rounded-md p-4">
-          {children}
-        </main>
+        <main>{children}</main>
       </body>
     </html>
   );

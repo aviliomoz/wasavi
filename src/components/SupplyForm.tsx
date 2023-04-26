@@ -141,7 +141,7 @@ export const SupplyForm = ({ supply }: Props) => {
               waste
             ).toFixed(2)}
             disabled
-            className="w-20 border rounded-md px-2"
+            className="w-24 border rounded-md px-2"
           />
         </label>
         <div className="flex items-center gap-2 justify-center mt-6">
